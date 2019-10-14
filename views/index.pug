@@ -1,0 +1,19 @@
+doctype html
+html
+  head
+    title= title
+    meta(name="google-signin-client_id" content="845226368257-rpep5duu3iam6rpg7f9deutbdf5nv0n4.apps.googleusercontent.com")
+
+  body
+
+    form(action='https://localhost:3000/storage/stories', method='POST', enctype="multipart/form-data",name="myform")
+      input(type="text" value="Sanjiv" name="username")
+      input(type="text" value="profile" name="storageOption")
+      input(type='file' name='avatar')
+     
+    button.sendButton Send
+    
+
+    script(src='./facebook_auth.js')  
+    script(async defer src="https://connect.facebook.net/en_US/sdk.js")
+    

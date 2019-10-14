@@ -1,0 +1,4 @@
+{
+    "jwtKey": "myday_jwtkey", 
+    "databaseSecret": "myday_jsonwebtoken"
+}
