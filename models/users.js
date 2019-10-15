@@ -143,6 +143,11 @@ const userSchema = new mongoose.Schema({
         // I didn't validate email here because of regex of SO which I don't trust at all and will rely on Joi for that! 
     }, 
 
+    emailVerified : {
+        type: Boolean, 
+        required: true
+    }, 
+
     image:{
         type: String
     }, 

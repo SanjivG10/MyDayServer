@@ -21,15 +21,11 @@ function signTheUser(theUser){
            })
         }
         else{
-            return res.send('Error Occured while Logging In', err)
+            return res.header(400).send('Error Occured while Logging In', err)
         }
     } )
    
 }
-
-
-
-
 
 login.post('/',  async (req,res)=>{
     

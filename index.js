@@ -1,11 +1,12 @@
 const express = require('express')
 const helmet = require('helmet')
 const httpsLocalhost = require("https-localhost")
+const jwt = require('jsonwebtoken')
 
 
 const {login} = require('./router/auth/login')
 const {register} = require('./router/auth/register')
-
+const {user} = require('./models/users')
 const {storage}  = require('./router/storage')
 
 PORT = process.env.PORT || 3000
@@ -16,6 +17,8 @@ app.set('view engine','pug')
 app.set('views','./views')
 
 app.use(express.json())
+app.use(express.urlencoded({extended:true}));
+
 app.use(express.static('static'))
 app.use('/login/',login)
 app.use('/register',register)
@@ -32,6 +35,8 @@ app.get('/home',(req,res)=>{
     'hait':'hait'
   }) 
 })
+
+
 
 app.listen(PORT,()=>{
   console.log(' RUNNING WITH HTTPs ')

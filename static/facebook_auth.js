@@ -13,11 +13,6 @@ const  clientID = "845226368257-rpep5duu3iam6rpg7f9deutbdf5nv0n4.apps.googleuser
 const client_secret = "_y-ftx7SI6XFqHV3vZLWoUO6"
 
 
-document.querySelector('.sendButton').onclick = (e)=>{
-    console.log(document.myform)
-    document.myform.submit()
-}
-
 document.querySelector('.facebook').onclick = (  (event)=>{
     
     FB.getLoginStatus(function(response) {
