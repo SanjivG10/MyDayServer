@@ -34,7 +34,7 @@ const storePlace = multer.diskStorage({
 
     },
     filename: function (req, file, cb) {
-      cb(null, req.body.photoName||'' + Date.now()+'.jpg')
+      cb(null, Date.now()+'.jpg')
     }
   })
 
@@ -56,7 +56,6 @@ const upload = multer({
 
 storage.use(express.json())
 
-
 storage.post('/stories',(req,res)=>{
     upload(req, res, function (err) {
         if (err instanceof multer.MulterError) {
@@ -71,20 +70,15 @@ storage.post('/stories',(req,res)=>{
           // An unknown error occurred when uploading.
         }
 
-
         //we save the content in database now!! 
         
-
         return res.send({
             imageUrl: req.file.path, 
             postedBy: req.body.username, 
             publishedDate: Date.now(), 
         })
-
         // Everything went fine.
       })
-    
-
 })
 
 module.exports.storage = storage

@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken')
 
 const {login} = require('./router/auth/login')
 const {register} = require('./router/auth/register')
-const {user} = require('./models/users')
 const {storage}  = require('./router/storage')
 
 PORT = process.env.PORT || 3000
@@ -35,7 +34,6 @@ app.get('/home',(req,res)=>{
     'hait':'hait'
   }) 
 })
-
 
 
 app.listen(PORT,()=>{

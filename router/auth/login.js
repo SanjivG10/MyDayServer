@@ -6,8 +6,10 @@ const {OAuth2Client} = require('google-auth-library');
 
 const bcrypt = require('bcrypt')
 const fetch = require('node-fetch')
-//getting user model 
+
 const {user,fbUser,googleUser} = require('../../models/users')
+const {checkVerifyAuth} = require('./checkLogin')
+
 
 login = express()
 
@@ -23,8 +25,7 @@ function signTheUser(theUser){
         else{
             return res.header(400).send('Error Occured while Logging In', err)
         }
-    } )
-   
+    })
 }
 
 login.post('/',  async (req,res)=>{
@@ -35,6 +36,9 @@ login.post('/',  async (req,res)=>{
             error: 'The user you are trying to sign in is badly configured'
         })
     }
+
+
+    console.log(req.body)
 
     const {error,value} = verifyUser(req.body); 
 
@@ -74,11 +78,8 @@ login.post('/',  async (req,res)=>{
                 
                 if (valid)
                 {
-                    // valid password!! 
                     // use jwstoken and sent it to user! 
-
                     signTheUser(theUser); 
-                    
                 }
                 else{
                     return res.header(400).send({
@@ -285,7 +286,7 @@ login.post('/google',async (req,res)=>{
 
 
 
-login.post('/verifyAuth',async (req,res)=>{
+login.post('/verifyAuth',checkVerifyAuth,async (req,res)=>{
     try {
         const decoded = await jwt.verify(req.body.token, config.get('databaseSecret'));
         // lets show him last login here than previous place! 
