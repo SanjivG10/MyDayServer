@@ -35,7 +35,6 @@ app.get('/home',(req,res)=>{
   }) 
 })
 
-console.log("NODE JS DEPLOYEDDDDD")
 
 app.listen(PORT,()=>{
   console.log(' RUNNING THE APP ')

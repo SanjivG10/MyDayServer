@@ -1,6 +1,9 @@
 const  mongoose = require('mongoose')
 
-mongoose.connect('mongodb+srv://sanjiv:sanjiv@cluster0-nruyn.mongodb.net/users?retryWrites=true&w=majority',{ useNewUrlParser: true, useUnifiedTopology: true  });
+mongoose.connect('mongodb+srv://sanjiv:sanjiv@cluster0-nruyn.mongodb.net/users?retryWrites=true&w=majority',{ useNewUrlParser: true, useUnifiedTopology: true  })
+.catch((error)=>{
+    console.log(" THIS IS THE DATABASE ERROR ",error)
+})
 
 const db = mongoose.connection;
 
