@@ -26,6 +26,7 @@ app.use('/storage',storage)
 app.use(helmet())
 
 app.get('/',(req,res)=>{
+  console.log("GETTING THE INITIAL HOME PAGE")
   return res.render('index',{title:"facebook",body:'hello'})
 })
 
@@ -34,7 +35,6 @@ app.get('/home',(req,res)=>{
     'hait':'hait'
   }) 
 })
-
 
 app.listen(PORT,()=>{
   console.log(' RUNNING WITH HTTPs ')
