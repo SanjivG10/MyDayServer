@@ -8,7 +8,7 @@ const {login} = require('./router/auth/login')
 const {register} = require('./router/auth/register')
 const {storage}  = require('./router/storage')
 
-PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3000
 
 app = httpsLocalhost()
 
