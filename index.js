@@ -1,7 +1,6 @@
 const express = require('express')
 const helmet = require('helmet')
 const httpsLocalhost = require("https-localhost")
-const jwt = require('jsonwebtoken')
 
 
 const {login} = require('./router/auth/login')
@@ -36,8 +35,10 @@ app.get('/home',(req,res)=>{
   }) 
 })
 
+console.log("NODE JS DEPLOYEDDDDD")
+
 app.listen(PORT,()=>{
-  console.log(' RUNNING WITH HTTPs ')
+  console.log(' RUNNING THE APP ')
 })
 
 
