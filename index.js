@@ -30,6 +30,7 @@ app.get('/',(req,res)=>{
 })
 
 app.get('/home',(req,res)=>{
+  console.log('HOME WAS CALLED ')
   return res.send({
     'hait':'hait'
   }) 
