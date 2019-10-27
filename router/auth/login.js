@@ -41,17 +41,19 @@ login.post('/',  async (req,res)=>{
 
     const {error,value} = verifyUser(req.body);
 
+    console.log(error)
+
     if(error)
     {
         return res.header(400).send( {
-          err: 'Invalid Username or Password.'
+          error: 'Invalid Username or Password.'
         })
     }
 
     else if(!value)
     {
         return res.header(400).send({
-          err:"Unexpected Problem Encountered!"
+          error:"Unexpected Problem Encountered!"
         })
     }
 
@@ -75,7 +77,7 @@ login.post('/',  async (req,res)=>{
                 if(err)
                 {
                     return res.header(400).send({
-                        err: 'Password could not be hashed ' + err
+                        error: 'Password could not be hashed ' + err
                     })
                 }
 
@@ -86,14 +88,16 @@ login.post('/',  async (req,res)=>{
                 }
                 else{
                     return res.header(400).send({
-                        err: 'Password do not match. Make sure you type correctly!'
+                        error: 'Password do not match. Make sure you type correctly!'
                     })
                 }
             });
 
         }
         else{
-            return res.status(400).send('Invalid Username or Password')
+            return res.status(400).send({
+                error: 'Invalid Username or Password'
+            })
         }
     });
 
