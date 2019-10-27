@@ -25,17 +25,14 @@ app.use('/login/',login)
 app.use(helmet())
 
 app.get('/',(req,res)=>{
-  console.log("GETTING THE INITIAL HOME PAGE")
   return res.render('index',{title:"facebook",body:'hello'})
 })
 
 app.get('/home',(req,res)=>{
-  console.log('HOME WAS CALLED ')
   return res.send({
     'hait':'hait'
   }) 
 })
-
 
 app.listen(PORT,()=>{
   console.log(' RUNNING THE APP ')

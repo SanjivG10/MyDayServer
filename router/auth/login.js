@@ -29,7 +29,7 @@ function signTheUser(theUser){
 }
 
 login.post('/',  async (req,res)=>{
-    
+
     if(!req.body)
     {
         return res.status(400).send({
@@ -40,10 +40,11 @@ login.post('/',  async (req,res)=>{
 
     console.log(req.body)
 
-    const {error,value} = verifyUser(req.body); 
+    const {error,value} = verifyUser(req.body);
 
     if(error)
     {
+        console.warn('THIS IS THE ERROR ',error)
         return res.send('Invalid Username or Password.')
     }
 
@@ -52,7 +53,7 @@ login.post('/',  async (req,res)=>{
         return res.header(400).send("Unexpected Problem Encountered!")
     }
 
-    // here we compare the password with the hash and if it goes all right, we will improve! 
+    // here we compare the password with the hash and if it goes all right, we will improve!
 
     // query database with given email or username.. since I the Great would want username to be that good, lets go username wise !
     let queryParam = {}
@@ -61,9 +62,9 @@ login.post('/',  async (req,res)=>{
         queryParam.username = req.body.username
     }
     else{
-        queryParam.email = req.body.email 
+        queryParam.email = req.body.email
     }
-    
+
     user.findOne(queryParam).exec(function (err, theUser) {
         if(!err && theUser)
         {
@@ -75,18 +76,18 @@ login.post('/',  async (req,res)=>{
                         err: 'Password could not be hashed ' + err
                     })
                 }
-                
+
                 if (valid)
                 {
-                    // use jwstoken and sent it to user! 
-                    signTheUser(theUser); 
+                    // use jwstoken and sent it to user!
+                    signTheUser(theUser);
                 }
                 else{
                     return res.header(400).send({
                         err: 'Password do not match. Make sure you type correctly!'
                     })
                 }
-            }); 
+            });
 
         }
         else{
@@ -95,7 +96,7 @@ login.post('/',  async (req,res)=>{
     });
 
     // we attach auth token in header file, now we have to signIn till the authToken is removed from user!
-    // so we receive request from user again with the given auth token, lets say in seprate route!! 
+    // so we receive request from user again with the given auth token, lets say in seprate route!!
 })
 
 
@@ -105,7 +106,7 @@ login.post('/facebook',async(req,res)=>{
     {
         if (req.body.response){
 
-            const userID = req.body.response.authResponse.userID 
+            const userID = req.body.response.authResponse.userID
             const access_token = req.body.response.authResponse.accessToken
             const app_id = '516541285794241'
             const app_secret = '6551e22a7708cdcfab45197790b5bb84'
@@ -116,37 +117,37 @@ login.post('/facebook',async(req,res)=>{
             {
                 await fetch(URL)
                 .then(res => res.json())
-                .then(json => 
+                .then(json =>
                     {
                         if(json.data.is_valid)
                         {
                             fbUser.findOne({fbID:userID}).exec(function(err,theUser){
                                 if(!err && theUser )
                                 {
-                                    signTheUser(theUser); 
+                                    signTheUser(theUser);
                                 }
-                
+
                                 else {
 
                                     const username =  json.data.user_id
 
-                
+
                                     const newUser = new fbUser({
-                                        fbID: userID, 
+                                        fbID: userID,
                                         accessToken : access_token,
-                                        image :  image||'empty', 
+                                        image :  image||'empty',
                                         username : username
                                     })
-                
+
                                     newUser.save((err)=>{
                                         if (err) {
                                             return res.status(400).send({
                                                 err: 'Database Error Occured '+err
                                             })
                                         }
-                
+
                                         else {
-                                            signTheUser(theUser); 
+                                            signTheUser(theUser);
                                         }
                                     })
                                     // lets create user in our database
@@ -159,7 +160,7 @@ login.post('/facebook',async(req,res)=>{
                             })
                         }
 
-                        
+
                     }
                 ).catch((err)=>{
                     console.log(err)
@@ -170,10 +171,10 @@ login.post('/facebook',async(req,res)=>{
             }
 
             verifyAndSave()
-        
+
 
             // verify the token here by calling the graph, if response is good, then it is good!
-            
+
         }
         else {
             return res.header(400).send({
@@ -202,14 +203,14 @@ login.post('/google',async (req,res)=>{
             const client = new OAuth2Client(clientID);
 
             async function verifyAndSave() {
-            
+
                 try{
 
                     const ticket = await client.verifyIdToken({
                         idToken: id_token,
                         audience: clientID
                     });
-            
+
                     const payload = ticket.getPayload();
                     const googleID = payload.sub
                     const image = payload.picture
@@ -222,28 +223,28 @@ login.post('/google',async (req,res)=>{
                         {
                             console.log("USER ALREADY FOUND")
 
-                            signTheUser(theUser); 
+                            signTheUser(theUser);
                         }
-        
+
                         else {
                             console.log(err)
                             const newUser = new googleUser({
-                                id_token: id_token, 
+                                id_token: id_token,
                                 googleID : googleID,
                                 image :  image,
                                 username: username
                             })
-        
+
                             newUser.save((err)=>{
                                 if (err) {
                                     return res.status(400).send({
                                         err: 'Database Error Occured '+err
                                     })
                                 }
-        
+
                                 else {
                                     console.log("USER SUCCESSFULLY CREATED=> ",newUser)
-                                    signTheUser(newUser); 
+                                    signTheUser(newUser);
                                 }
                             })
                             // lets create user in our database
@@ -251,7 +252,7 @@ login.post('/google',async (req,res)=>{
                     })
 
                 }
-            
+
                 catch(err)
                 {
                     return res.header(400).send({
@@ -262,13 +263,13 @@ login.post('/google',async (req,res)=>{
                 //const domain = payload['hd'];
             }
 
-            
+
             verifyAndSave()
 
-            
-            
 
-            
+
+
+
         }
         else {
             return res.header(400).send({
@@ -289,23 +290,24 @@ login.post('/google',async (req,res)=>{
 login.post('/verifyAuth',checkVerifyAuth,async (req,res)=>{
     try {
         const decoded = await jwt.verify(req.body.token, config.get('databaseSecret'));
-        // lets show him last login here than previous place! 
+        // lets show him last login here than previous place!
         return res.send({
-            user: decoded, 
+            user: decoded,
             success: 'success',
         })
       } catch(err) {
-          
+
         return res.header(400).send({
             err
         })
-      }    
+      }
 })
 
 
 function verifyUser (user){
     const schema = Joi.object({
         username: Joi.string()
+            .required()
             .alphanum()
             .min(4)
             .max(30),
@@ -318,11 +320,11 @@ function verifyUser (user){
     })
 
    return schema.validate({
-        username: user.username, 
-        password: user.password, 
-        email: user.email 
+        username: user.username,
+        password: user.password,
+        email: user.email
         })
 }
 
 
-module.exports.login = login; 
+module.exports.login = login;
