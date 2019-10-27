@@ -17,7 +17,7 @@ function signTheUser(theUser){
     jwt.sign( { theUser}, config.get('DATABASE_SECRET'),function (err,token){
         if(!err)
         {
-          console.log("SIGNING THE USER ")
+          console.log("SIGNING THE USER  token =>",token)
 
             return res.header('x-auth-token',token).send({
                 success: "SUCCESS"
