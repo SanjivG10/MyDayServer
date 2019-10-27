@@ -75,6 +75,8 @@ login.post('/',  async (req,res)=>{
     user.findOne(queryParam).exec(function (err, theUser) {
         if(!err && theUser)
         {
+
+            console.log("USER FOUDN>>> CHECKING PASSWORD")
             //lets bcrypt the password
             bcrypt.compare(req.body.password, theUser.password, function(err, valid) {
                 if(err)
@@ -90,6 +92,7 @@ login.post('/',  async (req,res)=>{
                     signTheUser(theUser);
                 }
                 else{
+                  console.log("PASSWORD NOT CORRECT AND SENING SOMEHTING ")
                     return res.header(400).send({
                         error: 'Password do not match. Make sure you type correctly!'
                     })
