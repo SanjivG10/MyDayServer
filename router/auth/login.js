@@ -98,6 +98,7 @@ login.post('/',  async (req,res)=>{
 
         }
         else{
+            console.log("USER NOT FOUND")
             return res.status(400).send({
                 error: 'Invalid Username or Password'
             })
