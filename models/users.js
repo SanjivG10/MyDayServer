@@ -1,6 +1,6 @@
 const  mongoose = require('mongoose')
 
-mongoose.connect('mongodb+srv://sanjiv:sanjiv@cluster0-nruyn.mongodb.net/users?retryWrites=true&w=majority',{ useNewUrlParser: true, useUnifiedTopology: true  })
+mongoose.connect('mongodb+srv://sanjiv:sanjiv@cluster0-nruyn.mongodb.net/test?retryWrites=true&w=majority',{ useNewUrlParser: true, useUnifiedTopology: true  })
 .catch((error)=>{
     console.log(" THIS IS THE DATABASE ERROR ",error)
 })
@@ -18,48 +18,48 @@ db.once('open', function() {
 
 const fbUserSchema = new mongoose.Schema({
     fbID: {
-        type: String, 
+        type: String,
         required:true
-    }, 
+    },
 
     accessToken : {
         type:String,
-        required:true , 
-    }, 
+        required:true ,
+    },
 
     username : {
         type: String,
-        min:4, 
+        min:4,
         max: 50
-    }, 
+    },
 
     image : {
         type: String
-    }, 
+    },
 
     follows : {
-        min: 0, 
+        min: 0,
         type: Array
-    }, 
+    },
 
     following : {
-        min: 0, 
+        min: 0,
         type: Array
-    }, 
+    },
 
     lastOnline : {
         type: Date
-    }, 
+    },
 
     posts: {
-        type: Array, 
+        type: Array,
         min: 0
-    }, 
-    
+    },
+
     notifications : {
-        type: Array, 
+        type: Array,
         min: 0
-    }, 
+    },
 
     speciality : {
         enum : ['naive','semi-pro','professional','world-class','legend']
@@ -70,53 +70,53 @@ const fbUserSchema = new mongoose.Schema({
 
 const googleUserSchema = new  mongoose.Schema({
     googleID: {
-        type: String, 
+        type: String,
         required:true
-    }, 
+    },
 
     id_token : {
         type:String,
-        required:true , 
-    }, 
+        required:true ,
+    },
 
     username : {
         type: String,
-        min:4, 
+        min:4,
         max: 50
-    }, 
+    },
 
     image : {
         type: String
-    }, 
+    },
 
     follows : {
-        min: 0, 
+        min: 0,
         type: Array
-    }, 
+    },
 
     following : {
-        min: 0, 
+        min: 0,
         type: Array
-    }, 
+    },
 
     lastOnline : {
         type: Date
-    }, 
+    },
 
     posts: {
-        type: Array, 
+        type: Array,
         min: 0
-    }, 
-    
+    },
+
     notifications : {
-        type: Array, 
+        type: Array,
         min: 0
-    }, 
+    },
 
     speciality : {
         enum : ['naive','semi-pro','professional','world-class','legend']
     }
-}) 
+})
 
 
 
@@ -124,60 +124,60 @@ const userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
-        min:4, 
-        max: 30, 
+        min:4,
+        max: 30,
         unique: true
-    }, 
-    // we are saving becrypted password so length won't match up, so we give arbitary value which doesnt generate error! 
+    },
+    // we are saving becrypted password so length won't match up, so we give arbitary value which doesnt generate error!
     password: {
         required: true,
-        type: String, 
+        type: String,
         validate: {
             validator: function(v) {
               return /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/.test(v);
             },
             message: password => `${password.value} password is not valid! `
           },
-    }, 
+    },
     email : {
-        required : true, 
-        unique: true, 
+        required : true,
+        unique: true,
         type: String,
-        // I didn't validate email here because of regex of SO which I don't trust at all and will rely on Joi for that! 
-    }, 
+        // I didn't validate email here because of regex of SO which I don't trust at all and will rely on Joi for that!
+    },
 
     emailVerified : {
-        type: Boolean, 
+        type: Boolean,
         required: true
-    }, 
+    },
 
     image:{
         type: String
-    }, 
+    },
 
     follows : {
-        min: 0, 
+        min: 0,
         type: Array
-    }, 
+    },
 
     following : {
-        min: 0, 
+        min: 0,
         type: Array
-    }, 
+    },
 
     lastOnline : {
         type: Date
-    }, 
+    },
 
     posts: {
-        type: Array, 
+        type: Array,
         min: 0
-    }, 
-    
+    },
+
     notifications : {
-        type: Array, 
+        type: Array,
         min: 0
-    }, 
+    },
 
     speciality : {
         enum : ['naive','semi-pro','professional','world-class','legend']

@@ -37,6 +37,8 @@ login.post('/',  async (req,res)=>{
         })
     }
 
+    Object.keys(req.body).map(k => req.body[k] = req.body[k].trim());
+
     console.log(req.body)
 
     const {error,value} = verifyUser(req.body);
@@ -96,7 +98,6 @@ login.post('/',  async (req,res)=>{
 
         }
         else{
-            console.log("VERIFICATION DONE, BUT NO USER FOUND IN DATABASE")
             return res.status(400).send({
                 error: 'Invalid Username or Password'
             })
