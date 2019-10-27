@@ -10,12 +10,11 @@ const fetch = require('node-fetch')
 const {user,fbUser,googleUser} = require('../../models/users')
 const {checkVerifyAuth} = require('./checkLogin')
 
-
 login = express()
 
 function signTheUser(theUser){
 
-    jwt.sign( { theUser}, config.get('databaseSecret'),function (err,token){
+    jwt.sign( { theUser}, config.get('DATABASE_SECRET'),function (err,token){
         if(!err)
         {
             return res.header('x-auth-token',token).send({
@@ -23,7 +22,7 @@ function signTheUser(theUser){
            })
         }
         else{
-            return res.header(400).send('Error Occured while Logging In', err)
+            return res.status(400).send('Error Occured while Logging In', err)
         }
     })
 }
@@ -37,12 +36,16 @@ login.post('/',  async (req,res)=>{
         })
     }
 
-    Object.keys(req.body).map(k => req.body[k] = req.body[k].trim());
+    Object.keys(req.body).map( (k) => {
+
+        req.body[k] = req.body[k].trim()
+
+    });
 
     if(req.body.email) {
       req.body.email = req.body.email.toLowerCase();
     }
-    else {
+    else if (req.body.username)  {
       req.body.username = req.body.username.toLowerCase();
     }
 
@@ -81,10 +84,7 @@ login.post('/',  async (req,res)=>{
         if(!err && theUser)
         {
 
-            console.log("USER FOUDN>>> CHECKING PASSWORD")
-            //lets bcrypt the password
-            console.log(`THE SENT PASSWORD ${req.body.password} THE HASH PASSWORD ${theUser.password} THE USER ${theUser}`)
-            bcrypt.compare("Sanjiv@123","$2y$10$uK7S7m7CiVUqKcNDhNj9jeUEwwwboEmOcC6LIB9qSkcd3oaopdWAa", function(err, valid) {
+            bcrypt.compare(req.body.password, theUser.password, function(err, valid) {
                 if(err)
                 {
                     return res.status(400).send({
@@ -98,7 +98,6 @@ login.post('/',  async (req,res)=>{
                     signTheUser(theUser);
                 }
                 else{
-                  console.log("PASSWORD NOT CORRECT AND SENING SOMEHTING ")
                     return res.status(400).send({
                         error: 'Password do not match. Make sure you type correctly!'
                     })
@@ -127,8 +126,8 @@ login.post('/facebook',async(req,res)=>{
 
             const userID = req.body.response.authResponse.userID
             const access_token = req.body.response.authResponse.accessToken
-            const app_id = '516541285794241'
-            const app_secret = '6551e22a7708cdcfab45197790b5bb84'
+            const app_id = config.get('FACEBOOK_APP_ID')
+            const app_secret = config.get('FACEBOOK_APP_SECRET')
             const image = req.body.response.authResponse.pic
             const URL = `https://graph.facebook.com/debug_token?input_token=${access_token}&access_token=${app_id}|${app_secret}`
 
@@ -147,14 +146,12 @@ login.post('/facebook',async(req,res)=>{
                                 }
 
                                 else {
-
                                     const username =  json.data.user_id
-
 
                                     const newUser = new fbUser({
                                         fbID: userID,
                                         accessToken : access_token,
-                                        image :  image||'empty',
+                                        image :  image||'',
                                         username : username
                                     })
 
@@ -174,7 +171,7 @@ login.post('/facebook',async(req,res)=>{
                             })
                         }
                         else {
-                            return res.header(400).send({
+                            return res.status(400).send({
                                 err:'Access token is not valid!'
                             })
                         }
@@ -183,7 +180,7 @@ login.post('/facebook',async(req,res)=>{
                     }
                 ).catch((err)=>{
                     console.log(err)
-                    return res.header(400).send({
+                    return res.status(400).send({
                         err: "Access Token could not be authorized "+ err
                     })
                 });
@@ -196,14 +193,14 @@ login.post('/facebook',async(req,res)=>{
 
         }
         else {
-            return res.header(400).send({
+            return res.status(400).send({
                 err: 'No return value from the facebook!'
             })
         }
     }
 
     else{
-        return res.header(400).send({
+        return res.status(400).send({
             err: 'Nothing Received!'
         })
     }
@@ -217,8 +214,7 @@ login.post('/google',async (req,res)=>{
 
             const id_token = req.body.response.id_token
 
-            // first we have to verify the token here!
-            const clientID = '845226368257-rpep5duu3iam6rpg7f9deutbdf5nv0n4.apps.googleusercontent.com'
+            const clientID = config.get('GOOGLE_CLIENT_ID')
             const client = new OAuth2Client(clientID);
 
             async function verifyAndSave() {
@@ -240,13 +236,10 @@ login.post('/google',async (req,res)=>{
                     googleUser.findOne({googleID:googleID}).exec(function(err,theUser){
                         if(!err && theUser )
                         {
-                            console.log("USER ALREADY FOUND")
-
                             signTheUser(theUser);
                         }
 
                         else {
-                            console.log(err)
                             const newUser = new googleUser({
                                 id_token: id_token,
                                 googleID : googleID,
@@ -262,7 +255,6 @@ login.post('/google',async (req,res)=>{
                                 }
 
                                 else {
-                                    console.log("USER SUCCESSFULLY CREATED=> ",newUser)
                                     signTheUser(newUser);
                                 }
                             })
@@ -274,7 +266,7 @@ login.post('/google',async (req,res)=>{
 
                 catch(err)
                 {
-                    return res.header(400).send({
+                    return res.status(400).send({
                         err
                     })
                 }
@@ -291,24 +283,23 @@ login.post('/google',async (req,res)=>{
 
         }
         else {
-            return res.header(400).send({
+            return res.status(400).send({
                 err: 'No return value from the facebook!'
             })
         }
     }
 
     else{
-        return res.header(400).send({
+        return res.status(400).send({
             err: 'Nothing Received!'
         })
     }
 })
 
 
-
 login.post('/verifyAuth',checkVerifyAuth,async (req,res)=>{
     try {
-        const decoded = await jwt.verify(req.body.token, config.get('databaseSecret'));
+        const decoded = await jwt.verify(req.body.token, config.get('DATABASE_SECRET'));
         // lets show him last login here than previous place!
         return res.send({
             user: decoded,
@@ -316,7 +307,7 @@ login.post('/verifyAuth',checkVerifyAuth,async (req,res)=>{
         })
       } catch(err) {
 
-        return res.header(400).send({
+        return res.status(400).send({
             err
         })
       }

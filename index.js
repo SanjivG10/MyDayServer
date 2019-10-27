@@ -31,18 +31,9 @@ app.get('/',(req,res)=>{
 app.get('/home',(req,res)=>{
   return res.send({
     'hait':'hait'
-  }) 
+  })
 })
 
 app.listen(PORT,()=>{
   console.log(' RUNNING THE APP ')
 })
-
-
-
-
-
-
-
-
-
