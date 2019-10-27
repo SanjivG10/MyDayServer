@@ -39,7 +39,12 @@ login.post('/',  async (req,res)=>{
 
     Object.keys(req.body).map(k => req.body[k] = req.body[k].trim());
 
-    console.log(req.body)
+    if(req.body.email) {
+      req.body.email = req.body.email.toLowerCase();
+    }
+    else {
+      req.body.username = req.body.username.toLowerCase();
+    }
 
     const {error,value} = verifyUser(req.body);
 
@@ -78,6 +83,7 @@ login.post('/',  async (req,res)=>{
 
             console.log("USER FOUDN>>> CHECKING PASSWORD")
             //lets bcrypt the password
+            console.log(`THE SENT PASSWORD ${req.body.password} THE HASH PASSWORD ${theUser.password} THE USER ${theUser}`)
             bcrypt.compare(req.body.password, theUser.password, function(err, valid) {
                 if(err)
                 {
