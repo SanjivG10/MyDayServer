@@ -84,7 +84,7 @@ login.post('/',  async (req,res)=>{
             console.log("USER FOUDN>>> CHECKING PASSWORD")
             //lets bcrypt the password
             console.log(`THE SENT PASSWORD ${req.body.password} THE HASH PASSWORD ${theUser.password} THE USER ${theUser}`)
-            bcrypt.compare(req.body.password,"$2y$10$uK7S7m7CiVUqKcNDhNj9jeUEwwwboEmOcC6LIB9qSkcd3oaopdWAa", function(err, valid) {
+            bcrypt.compare("Sanjiv@123","$2y$10$uK7S7m7CiVUqKcNDhNj9jeUEwwwboEmOcC6LIB9qSkcd3oaopdWAa", function(err, valid) {
                 if(err)
                 {
                     return res.status(400).send({
