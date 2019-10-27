@@ -37,20 +37,20 @@ login.post('/',  async (req,res)=>{
         })
     }
 
-
-    console.log(req.body)
-
     const {error,value} = verifyUser(req.body);
 
     if(error)
     {
-        console.warn('THIS IS THE ERROR ',error)
-        return res.send('Invalid Username or Password.')
+        return res.header(400).send( {
+          err: 'Invalid Username or Password.'
+        })
     }
 
     else if(!value)
     {
-        return res.header(400).send("Unexpected Problem Encountered!")
+        return res.header(400).send({
+          err:"Unexpected Problem Encountered!"
+        })
     }
 
     // here we compare the password with the hash and if it goes all right, we will improve!
