@@ -17,11 +17,15 @@ function signTheUser(theUser){
     jwt.sign( { theUser}, config.get('DATABASE_SECRET'),function (err,token){
         if(!err)
         {
+          console.log("SIGNING THE USER ")
+
             return res.header('x-auth-token',token).send({
                 success: "SUCCESS"
            })
         }
         else{
+            console.log(" SOME ERROR OCCURED ",err)
+
             return res.status(400).send('Error Occured while Logging In', err)
         }
     })
@@ -52,7 +56,6 @@ login.post('/',  async (req,res)=>{
     const {error,value} = verifyUser(req.body);
 
     console.log(error,value)
-
 
     if(error)
     {
