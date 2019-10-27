@@ -12,16 +12,16 @@ const {checkVerifyAuth} = require('./checkLogin')
 
 login = express()
 
-function signTheUser(theUser){
+function signTheUser(res,theUser){
 
     jwt.sign( { theUser}, config.get('DATABASE_SECRET'),function (err,token){
         if(!err)
         {
           console.log("SIGNING THE USER  token =>",token)
 
-            return res.send({
+            return res.header('x-auth-token',token).send({
                 success: "SUCCESS",
-                token
+
            })
         }
         else{
@@ -97,7 +97,7 @@ login.post('/',  async (req,res)=>{
 
                 if (valid)
                 {
-                    signTheUser(theUser);
+                    signTheUser(res,theUser);
                 }
                 else{
                     return res.status(400).send({
