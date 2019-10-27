@@ -99,6 +99,7 @@ login.post('/',  async (req,res)=>{
                 {
                     signTheUser(res,theUser);
                 }
+
                 else{
                     return res.status(400).send({
                         error: 'Password do not match. Make sure you type correctly!'
@@ -115,10 +116,7 @@ login.post('/',  async (req,res)=>{
         }
     });
 
-    // we attach auth token in header file, now we have to signIn till the authToken is removed from user!
-    // so we receive request from user again with the given auth token, lets say in seprate route!!
 })
-
 
 login.post('/facebook',async(req,res)=>{
 
@@ -297,7 +295,6 @@ login.post('/google',async (req,res)=>{
         })
     }
 })
-
 
 login.post('/verifyAuth',checkVerifyAuth,async (req,res)=>{
     try {
