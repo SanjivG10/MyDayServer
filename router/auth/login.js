@@ -19,12 +19,12 @@ function signTheUser(theUser){
         {
           console.log("SIGNING THE USER  token =>",token)
 
-            return res.header('x-auth-token',token).send({
-                success: "SUCCESS"
+            return res.send({
+                success: "SUCCESS",
+                token
            })
         }
         else{
-            console.log(" SOME ERROR OCCURED ",err)
 
             return res.status(400).send('Error Occured while Logging In', err)
         }
@@ -97,7 +97,6 @@ login.post('/',  async (req,res)=>{
 
                 if (valid)
                 {
-                    // use jwstoken and sent it to user!
                     signTheUser(theUser);
                 }
                 else{
