@@ -48,14 +48,14 @@ login.post('/',  async (req,res)=>{
 
     if(error)
     {
-        return res.header(400).send( {
+        return res.status(400).send( {
           error: 'Invalid Username or Password.'
         })
     }
 
     else if(!value)
     {
-        return res.header(400).send({
+        return res.status(400).send({
           error:"Unexpected Problem Encountered!"
         })
     }
@@ -81,7 +81,7 @@ login.post('/',  async (req,res)=>{
             bcrypt.compare(req.body.password, theUser.password, function(err, valid) {
                 if(err)
                 {
-                    return res.header(400).send({
+                    return res.status(400).send({
                         error: 'Password could not be hashed ' + err
                     })
                 }
@@ -93,7 +93,7 @@ login.post('/',  async (req,res)=>{
                 }
                 else{
                   console.log("PASSWORD NOT CORRECT AND SENING SOMEHTING ")
-                    return res.header(400).send({
+                    return res.status(400).send({
                         error: 'Password do not match. Make sure you type correctly!'
                     })
                 }
