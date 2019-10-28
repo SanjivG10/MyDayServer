@@ -120,11 +120,6 @@ login.post('/facebook',async(req,res)=>{
 
     if(req.body)
     {
-      console.log("This is the body ",req.body)
-      console.log(req.body.userID)
-      console.log(req.body.accessToken)
-      console.log(req.body.image)
-
       const userID = req.body.userID
       const access_token = req.body.accessToken
       const app_id = config.get('FACEBOOK_APP_ID')
@@ -139,6 +134,7 @@ login.post('/facebook',async(req,res)=>{
           .then(res => res.json())
           .then(json =>
               {
+                  console.log("VERIFYING ",json)
                   if(json.data.is_valid)
                   {
                       fbUser.findOne({fbID:userID}).exec(function(err,theUser){
@@ -149,6 +145,7 @@ login.post('/facebook',async(req,res)=>{
 
                           else {
                               const username =  json.data.user_id
+                              console.log("Username WE THOUGHT OF PUTTING ",username)
 
                               const newUser = new fbUser({
                                   fbID: userID,
@@ -158,6 +155,9 @@ login.post('/facebook',async(req,res)=>{
                                   email: email
                               })
 
+                              console.log("SAVING NEW USER")
+
+
                               newUser.save((err)=>{
                                   if (err) {
                                       return res.status(400).send({
@@ -166,6 +166,8 @@ login.post('/facebook',async(req,res)=>{
                                   }
 
                                   else {
+                                    console.log("SIGNING NEW USER")
+
                                       signTheUser(theUser);
                                   }
                               })
@@ -174,6 +176,8 @@ login.post('/facebook',async(req,res)=>{
                       })
                   }
                   else {
+                    console.log("ACCESS TOKEN NOT VALID")
+
                       return res.status(400).send({
                           error:'Access token is not valid!'
                       })
