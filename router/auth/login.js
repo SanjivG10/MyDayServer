@@ -119,6 +119,8 @@ login.post('/facebook',async(req,res)=>{
 
     if(req.body)
     {
+
+      console.log("THIS IS THE USER SENT ",req.body)
       const userID = req.body.userID
       const access_token = req.body.accessToken
       const app_id = config.get('FACEBOOK_APP_ID')
@@ -133,6 +135,17 @@ login.post('/facebook',async(req,res)=>{
           .then(response => response.json())
           .then(json =>
               {
+
+                console.log(" INSIDE ASYNC FUNC ")
+                console.log("USERID ",userID)
+                console.log("USERID ",req.body.userID)
+
+                console.log("USERID ",image)
+                console.log("USERID ",req.body.image)
+                console.log("USERID ",access_token)
+                console.log("USERID ",req.body.access_token)
+
+
                   if(json.data.is_valid)
                   {
                       fbUser.findOne({fbID:userID}).exec(function(err,theUser){
