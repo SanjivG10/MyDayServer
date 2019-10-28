@@ -13,7 +13,6 @@ const {checkVerifyAuth} = require('./checkLogin')
 login = express()
 
 function signTheUser(res,theUser){
-
     jwt.sign( { theUser}, config.get('DATABASE_SECRET'),function (err,token){
         if(!err)
         {
@@ -141,7 +140,7 @@ login.post('/facebook',async(req,res)=>{
                           console.log("USER IS VALID!!! ",theUser)
                           if(!err && theUser )
                           {
-                              signTheUser(theUser);
+                              signTheUser(res,theUser);
                           }
 
                           else {
@@ -235,7 +234,7 @@ login.post('/google',async (req,res)=>{
                     googleUser.findOne({googleID:googleID}).exec(function(err,theUser){
                         if(!err && theUser )
                         {
-                            signTheUser(theUser);
+                            signTheUser(res,theUser);
                         }
 
                         else {
