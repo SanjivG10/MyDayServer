@@ -120,6 +120,7 @@ login.post('/facebook',async(req,res)=>{
 
     if(req.body)
     {
+      console.log("This is the body",req.body)
       const userID = req.body.userID
       const access_token = req.body.accessToken
       const app_id = config.get('FACEBOOK_APP_ID')
