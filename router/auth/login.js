@@ -120,7 +120,11 @@ login.post('/facebook',async(req,res)=>{
 
     if(req.body)
     {
-      console.log("This is the body",req.body)
+      console.log("This is the body ",req.body)
+      console.log(req.body.userID)
+      console.log(req.body.accessToken)
+      console.log(req.body.image)
+
       const userID = req.body.userID
       const access_token = req.body.accessToken
       const app_id = config.get('FACEBOOK_APP_ID')
@@ -157,7 +161,7 @@ login.post('/facebook',async(req,res)=>{
                               newUser.save((err)=>{
                                   if (err) {
                                       return res.status(400).send({
-                                          err: 'Database Error Occured '+err
+                                          error: 'Database Error Occured '+err
                                       })
                                   }
 
@@ -171,7 +175,7 @@ login.post('/facebook',async(req,res)=>{
                   }
                   else {
                       return res.status(400).send({
-                          err:'Access token is not valid!'
+                          error:'Access token is not valid!'
                       })
                   }
 
@@ -180,7 +184,7 @@ login.post('/facebook',async(req,res)=>{
           ).catch((err)=>{
               console.log(err)
               return res.status(400).send({
-                  err: "Access Token could not be authorized "+ err
+                  error: "Access Token could not be authorized "+ err
               })
           });
       }
@@ -191,7 +195,7 @@ login.post('/facebook',async(req,res)=>{
 
     else{
         return res.status(400).send({
-            err: 'Nothing Received!'
+            error: 'Nothing Received!'
         })
     }
 })
@@ -240,7 +244,7 @@ login.post('/google',async (req,res)=>{
                             newUser.save((err)=>{
                                 if (err) {
                                     return res.status(400).send({
-                                        err: 'Database Error Occured '+err
+                                        error: 'Database Error Occured '+err
                                     })
                                 }
 
@@ -254,10 +258,10 @@ login.post('/google',async (req,res)=>{
 
                 }
 
-                catch(err)
+                catch(error)
                 {
                     return res.status(400).send({
-                        err
+                        error
                     })
                 }
                 // If request specified a G Suite domain:
@@ -274,14 +278,14 @@ login.post('/google',async (req,res)=>{
         }
         else {
             return res.status(400).send({
-                err: 'No return value from the facebook!'
+                error: 'No return value from the facebook!'
             })
         }
     }
 
     else{
         return res.status(400).send({
-            err: 'Nothing Received!'
+            error: 'Nothing Received!'
         })
     }
 })
@@ -294,10 +298,10 @@ login.post('/verifyAuth',checkVerifyAuth,async (req,res)=>{
             user: decoded,
             success: 'success',
         })
-      } catch(err) {
+      } catch(error) {
 
         return res.status(400).send({
-            err
+            error
         })
       }
 })
