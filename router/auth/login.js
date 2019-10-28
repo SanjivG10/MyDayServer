@@ -135,17 +135,24 @@ login.post('/facebook',async(req,res)=>{
               {
                   if(json.data.is_valid)
                   {
-                      fbUser.findOne({fbID:userID}).exec(function(err,theUser){
+                      fbUser.findOne({fbID:json.user_id}).exec(function(err,theUser){
 
                           if(!err && theUser )
                           {
                               console.log("USER FOUND")
+                              console.log("Image",image)
+                              console.log("access_token",access_token)
+
                               signTheUser(res,theUser);
                           }
 
                           else {
                               console.log("User not Found ",json)
                               console.log("USERID ",userID)
+                              console.log("USER FOUND")
+                              console.log("Image",image)
+                              console.log("access_token",access_token)
+                              
                               const username =  json.data.user_id
 
                               const newUser = new fbUser({
