@@ -133,19 +133,20 @@ login.post('/facebook',async(req,res)=>{
           .then(res => res.json())
           .then(json =>
               {
-                  console.log("VERIFYING ",json)
                   if(json.data.is_valid)
                   {
                       fbUser.findOne({fbID:userID}).exec(function(err,theUser){
-                          console.log("USER IS VALID!!! ",theUser)
+
                           if(!err && theUser )
                           {
+                              console.log("USER FOUND")
                               signTheUser(res,theUser);
                           }
 
                           else {
+                              console.log("User not Found ",json)
+                              console.log("USERID ",userID)
                               const username =  json.data.user_id
-                              console.log("Username WE THOUGHT OF PUTTING ",username)
 
                               const newUser = new fbUser({
                                   fbID: userID,
@@ -155,9 +156,6 @@ login.post('/facebook',async(req,res)=>{
                                   email: email
                               })
 
-                              console.log("SAVING NEW USER")
-
-
                               newUser.save((err)=>{
                                   if (err) {
                                       return res.status(400).send({
@@ -166,8 +164,6 @@ login.post('/facebook',async(req,res)=>{
                                   }
 
                                   else {
-                                    console.log("SIGNING NEW USER")
-
                                       signTheUser(theUser);
                                   }
                               })
@@ -176,8 +172,6 @@ login.post('/facebook',async(req,res)=>{
                       })
                   }
                   else {
-                    console.log("ACCESS TOKEN NOT VALID")
-
                       return res.status(400).send({
                           error:'Access token is not valid!'
                       })
@@ -186,7 +180,6 @@ login.post('/facebook',async(req,res)=>{
 
               }
           ).catch((err)=>{
-              console.log(err)
               return res.status(400).send({
                   error: "Access Token could not be authorized "+ err
               })
