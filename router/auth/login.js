@@ -17,11 +17,9 @@ function signTheUser(res,theUser){
     jwt.sign( { theUser}, config.get('DATABASE_SECRET'),function (err,token){
         if(!err)
         {
-          console.log("SIGNING THE USER  token =>",token)
 
             return res.header('x-auth-token',token).send({
                 success: "SUCCESS",
-
            })
         }
         else{
@@ -122,81 +120,77 @@ login.post('/facebook',async(req,res)=>{
 
     if(req.body)
     {
-        if (req.body.response){
+      const userID = req.body.userID
+      const access_token = req.body.accessToken
+      const app_id = config.get('FACEBOOK_APP_ID')
+      const app_secret = config.get('FACEBOOK_APP_SECRET')
+      const image = req.body.image
+      const email = req.body.email
+      const URL = `https://graph.facebook.com/debug_token?input_token=${access_token}&access_token=${app_id}|${app_secret}`
 
-            const userID = req.body.response.authResponse.userID
-            const access_token = req.body.response.authResponse.accessToken
-            const app_id = config.get('FACEBOOK_APP_ID')
-            const app_secret = config.get('FACEBOOK_APP_SECRET')
-            const image = req.body.response.authResponse.pic
-            const URL = `https://graph.facebook.com/debug_token?input_token=${access_token}&access_token=${app_id}|${app_secret}`
+      async function verifyAndSave()
+      {
+          await fetch(URL)
+          .then(res => res.json())
+          .then(json =>
+              {
+                  if(json.data.is_valid)
+                  {
+                      fbUser.findOne({fbID:userID}).exec(function(err,theUser){
+                          if(!err && theUser )
+                          {
+                              signTheUser(theUser);
+                          }
 
-            async function verifyAndSave()
-            {
-                await fetch(URL)
-                .then(res => res.json())
-                .then(json =>
-                    {
-                        if(json.data.is_valid)
-                        {
-                            fbUser.findOne({fbID:userID}).exec(function(err,theUser){
-                                if(!err && theUser )
-                                {
-                                    signTheUser(theUser);
-                                }
+                          else {
+                              const username =  json.data.user_id
 
-                                else {
-                                    const username =  json.data.user_id
+                              const newUser = new fbUser({
+                                  fbID: userID,
+                                  accessToken : access_token,
+                                  image :  image||'',
+                                  username : username,
+                                  email: email
+                              })
 
-                                    const newUser = new fbUser({
-                                        fbID: userID,
-                                        accessToken : access_token,
-                                        image :  image||'',
-                                        username : username
-                                    })
+                              newUser.save((err)=>{
+                                  if (err) {
+                                      return res.status(400).send({
+                                          err: 'Database Error Occured '+err
+                                      })
+                                  }
 
-                                    newUser.save((err)=>{
-                                        if (err) {
-                                            return res.status(400).send({
-                                                err: 'Database Error Occured '+err
-                                            })
-                                        }
-
-                                        else {
-                                            signTheUser(theUser);
-                                        }
-                                    })
-                                    // lets create user in our database
-                                }
-                            })
-                        }
-                        else {
-                            return res.status(400).send({
-                                err:'Access token is not valid!'
-                            })
-                        }
-
-
-                    }
-                ).catch((err)=>{
-                    console.log(err)
-                    return res.status(400).send({
-                        err: "Access Token could not be authorized "+ err
-                    })
-                });
-            }
-
-            verifyAndSave()
+                                  else {
+                                      signTheUser(theUser);
+                                  }
+                              })
+                              // lets create user in our database
+                          }
+                      })
+                  }
+                  else {
+                      return res.status(400).send({
+                          err:'Access token is not valid!'
+                      })
+                  }
 
 
-            // verify the token here by calling the graph, if response is good, then it is good!
+              }
+          ).catch((err)=>{
+              console.log(err)
+              return res.status(400).send({
+                  err: "Access Token could not be authorized "+ err
+              })
+          });
+      }
 
-        }
-        else {
-            return res.status(400).send({
-                err: 'No return value from the facebook!'
-            })
-        }
+      verifyAndSave()
+      // verify the token here by calling the graph, if response is good, then it is good!
+  else {
+      return res.status(400).send({
+          err: 'No return value from the facebook!'
+      })
+  }
     }
 
     else{
