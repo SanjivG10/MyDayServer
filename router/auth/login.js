@@ -138,6 +138,7 @@ login.post('/facebook',async(req,res)=>{
                   if(json.data.is_valid)
                   {
                       fbUser.findOne({fbID:userID}).exec(function(err,theUser){
+                          console.log("USER IS VALID!!! ",theUser)
                           if(!err && theUser )
                           {
                               signTheUser(theUser);
