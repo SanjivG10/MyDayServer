@@ -187,11 +187,6 @@ login.post('/facebook',async(req,res)=>{
 
       verifyAndSave()
       // verify the token here by calling the graph, if response is good, then it is good!
-  else {
-      return res.status(400).send({
-          err: 'No return value from the facebook!'
-      })
-  }
     }
 
     else{
