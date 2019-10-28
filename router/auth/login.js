@@ -130,12 +130,12 @@ login.post('/facebook',async(req,res)=>{
       async function verifyAndSave()
       {
           await fetch(URL)
-          .then(res => res.json())
+          .then(response => response.json())
           .then(json =>
               {
                   if(json.data.is_valid)
                   {
-                      fbUser.findOne({fbID:json.data.user_id}).exec(function(err,theUser){
+                      fbUser.findOne({fbID:userID}).exec(function(err,theUser){
 
                           if(!err && theUser )
                           {
