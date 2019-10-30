@@ -5,7 +5,7 @@ const {verifyUser} = require('./../../validate/validation')
 const config = require('config')
 
 const {user} = require('./../../models/users')
-const nodemailer = require('nodemailer');
+const {sendMail} = require('./sendMail')
 
 register = express()
 
@@ -22,7 +22,6 @@ register.post('/',  async (req,res)=>{
 
     if(error)
     {
-        console.log(req.body)
         return res.status(400).send(error.details[0].message)
     }
 
@@ -54,14 +53,13 @@ register.post('/',  async (req,res)=>{
                                 err: 'Database Error Occured '+err
                             })
                         }
+
                         else {
                             sendMail(res,req.body.email,value).catch((err)=>{
                                 return res.status(400).send({
                                     err: 'Email cannot be sent! '+err
                                 })
                             });
-
-
                         }
 
                       });
@@ -79,7 +77,6 @@ register.post('/',  async (req,res)=>{
             })
         }
 
-
     });
 
 })
@@ -88,8 +85,8 @@ register.get('/verifyToken',async (req,res)=>{
     const token  = req.query.token
     try {
 
-      const decoded = await jwt.verify(token, 'email_server_jwt');
-      console.log(decoded)
+      const decoded = await jwt.verify(token, config.get('EMAIL_SERVER'));
+
       user.findOne({email:decoded.email}).exec(function (err, theUser) {
 
         if(!err && theUser)
@@ -103,7 +100,7 @@ register.get('/verifyToken',async (req,res)=>{
             }
 
             else {
-                signTheUser(theUser);
+                signTheUser(res,theUser);
             }
         })
         }
@@ -117,11 +114,12 @@ register.get('/verifyToken',async (req,res)=>{
       return res.status(400).send({
           err
       })
+
     }
   })
 
-function signTheUser(theUser){
-    jwt.sign( { theUser}, config.get('databaseSecret'),function (err,token){
+function signTheUser(res,theUser){
+    jwt.sign( { theUser}, config.get('DATABASE_SECRET'),function (err,token){
         if(!err)
         {
             return res.header('x-auth-token',token).send({
@@ -132,52 +130,6 @@ function signTheUser(theUser){
             return res.status(400).send('Error Occured while Logging In', err)
         }
     } )
-}
-
-async function sendMail(res,email,value) {
-
-    let transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-            user: "bhairajagautam@gmail.com",
-            pass: "EMPTYFORNOW"
-        }
-    });
-
-    jwt.sign(
-        {
-            exp: Math.floor(Date.now() / 1000) + (60 * 60),
-            email:email
-        },
-        // change this here
-        'email_server_jwt',async function (err,token){
-        if(!err)
-        {
-            await transporter.sendMail({
-                from: '"MyDAY bhairajagautam@gmail.com', // sender address
-                to: email, // list of receivers
-                subject: 'Verify Your MyDay Email', // Subject line
-                html: `
-                    Congratulations! Your account has been successfully created. However, you need to verify that the given email is yours,
-                    click the link below to verify your email address.
-                    <br />
-                    <b> Remember that this token expires in an hour </b>
-                    <br />
-                    <a href="https://localhost:3000/register/verifyToken?token=${token}">https://localhost:3000/verifyToken?token=${token}</a>
-                    `
-            });
-
-            return res.send({
-                value:value
-            })
-        }
-        else{
-            return res.status(400).send('Error Occured while Logging In', err)
-        }
-    } )
-
-    // send mail with defined transport object
-
 }
 
 

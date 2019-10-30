@@ -9,6 +9,7 @@ const fetch = require('node-fetch')
 
 const {user,fbUser,googleUser} = require('../../models/users')
 const {checkVerifyAuth} = require('./checkLogin')
+const {sendMail} = require('./sendMail')
 
 login = express()
 
@@ -16,13 +17,11 @@ function signTheUser(res,theUser){
     jwt.sign( { theUser}, config.get('DATABASE_SECRET'),function (err,token){
         if(!err)
         {
-
             return res.header('x-auth-token',token).send({
-                success: "SUCCESS",
+                success: "SUCCESS"
            })
         }
         else{
-
             return res.status(400).send('Error Occured while Logging In', err)
         }
     })
@@ -37,11 +36,33 @@ login.post('/',  async (req,res)=>{
         })
     }
 
+
+    if(req.body.sendMail)
+    {
+      try {
+        await sendMail(res,req.body.email,req.body)
+
+        return res.send({
+          emailSent: 'Email has been sent. Make sure you verify the email within an hour!'
+        })
+
+      }
+
+      catch((err)=>{
+        return res.status(400).send({
+            err: 'Email cannot be sent! '+err
+        })
+      })
+
+    }
+
     Object.keys(req.body).map( (k) => {
 
         req.body[k] = req.body[k].trim()
 
     });
+
+
 
     if(req.body.email) {
       req.body.email = req.body.email.toLowerCase();
@@ -210,21 +231,14 @@ login.post('/google',async (req,res)=>{
             const clientID = config.get('GOOGLE_CLIENT_ID')
             const client = new OAuth2Client(clientID);
 
-            console.log(" INSIDE BODY RESPONSE CLIENT => ",client)
-
             async function verifyAndSave() {
 
                 try{
-
-                   console.log("CLIENT ID ",clientID)
-                   console.log("id_token =>", id_token)
 
                     const ticket = await client.verifyIdToken({
                         idToken: id_token,
                         audience: clientID
                     });
-
-                    console.log("THIS IS THE TICKET ",ticket)
 
                     const payload = ticket.getPayload();
                     const googleID = payload.sub
