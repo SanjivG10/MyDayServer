@@ -42,15 +42,13 @@ login.post('/',  async (req,res)=>{
 
       try {
         await sendMail(res,req.body.email,req.body)
-        return res.send({
-          emailSent: 'Email has been sent. Make sure you verify the email within an hour!'
-        })
+
       } catch (e) {
         return res.status(400).send({
-            error: 'Email cannot be sent! '+err
+            error: 'Email cannot be sent! '+ e.message
         })
       }
-    
+
     }
 
     Object.keys(req.body).map( (k) => {
