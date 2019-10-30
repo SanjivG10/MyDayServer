@@ -63,7 +63,7 @@ register.post('/',  async (req,res)=>{
                                     err: 'Email cannot be sent! '+err
                                 })
                             }
- 
+
                         }
 
                       });

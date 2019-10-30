@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken')
 
 module.exports.sendMail =  async function (res,email,value) {
 
+    console.log(" SENDING EMAIL ")
+
     let transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
@@ -10,6 +12,9 @@ module.exports.sendMail =  async function (res,email,value) {
             pass: config.get('GMAIL_ACCOUNT_PASSWORD')
         }
     });
+
+
+    console.log(" SIGNING JWT ")
 
     jwt.sign(
         {
@@ -21,8 +26,8 @@ module.exports.sendMail =  async function (res,email,value) {
         if(!err)
         {
             await transporter.sendMail({
-                from: '"MyDay', // sender address
-                to: email, // list of receivers
+                from: 'MyDay', // sender address
+                to: "sanjivgautamofficial@gmail.com", // list of receivers
                 subject: 'Verify Your Email', // Subject line
                 html: `
                     Congratulations! Your account has been successfully created. However, you need to verify that the given email is yours,
@@ -42,5 +47,5 @@ module.exports.sendMail =  async function (res,email,value) {
         else{
             return res.status(400).send('Error Occured while Verifying Email ', err)
         }
-    } ) 
+    } )
 }

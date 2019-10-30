@@ -39,14 +39,21 @@ login.post('/',  async (req,res)=>{
 
     if(req.body.sendMail)
     {
+      try {
 
-        try {
-            await sendMail(res,req.body.email,req.body)
-        } catch (error) {
-            return res.status(400).send({
-                err: 'Email cannot be sent! '+err
-            })
-        }
+        await sendMail(res,req.body.email,req.body)
+
+        return res.send({
+          emailSent: 'Email has been sent. Make sure you verify the email within an hour!'
+        })
+
+      }
+
+      catch((err)=>{
+        return res.status(400).send({
+            error: 'Email cannot be sent! '+err
+        })
+      })
 
     }
 
