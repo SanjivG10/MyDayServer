@@ -203,9 +203,9 @@ login.post('/facebook',async(req,res)=>{
 login.post('/google',async (req,res)=>{
     if(req.body)
     {
-        if (req.body.response){
+        if (req.body.id_token){
 
-              const id_token = req.body.id_token
+            const id_token = req.body.id_token
 
             const clientID = config.get('GOOGLE_CLIENT_ID')
             const client = new OAuth2Client(clientID);
@@ -273,14 +273,10 @@ login.post('/google',async (req,res)=>{
 
             verifyAndSave()
 
-
-
-
-
         }
         else {
             return res.status(400).send({
-                error: 'No return value from the facebook!'
+                error: 'No return value from the Google!'
             })
         }
     }
