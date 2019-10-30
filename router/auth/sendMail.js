@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken')
 
-export async function sendMail(res,email,value) {
+module.exports.sendMail =  async function (res,email,value) {
 
     let transporter = nodemailer.createTransport({
         service: 'Gmail',
@@ -35,11 +35,12 @@ export async function sendMail(res,email,value) {
             });
 
             return res.send({
-                EMAIL_VERIFIED: 'Email has been sent. Make sure you verify the email within an hour!'
+                emailSent: true,
+                emailSentMsg: 'Email has been sent. Make sure you verify the email within an hour!'
             })
         }
         else{
             return res.status(400).send('Error Occured while Verifying Email ', err)
         }
-    } )
+    } ) 
 }

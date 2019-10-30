@@ -46,7 +46,7 @@ register.post('/',  async (req,res)=>{
                         emailVerified: false
                     })
 
-                    newUser.save(function (err) {
+                    newUser.save( async function (err) {
                         if (err) {
 
                             return res.status(400).send({
@@ -55,11 +55,15 @@ register.post('/',  async (req,res)=>{
                         }
 
                         else {
-                            sendMail(res,req.body.email,value).catch((err)=>{
+
+                            try {
+                                await sendMail(res,req.body.email,value)
+                            } catch (error) {
                                 return res.status(400).send({
                                     err: 'Email cannot be sent! '+err
                                 })
-                            });
+                            }
+ 
                         }
 
                       });
