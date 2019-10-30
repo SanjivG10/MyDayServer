@@ -216,10 +216,14 @@ login.post('/google',async (req,res)=>{
 
                 try{
 
+                   console.log("SOMETHING WENT WRONG")
+
                     const ticket = await client.verifyIdToken({
                         idToken: id_token,
                         audience: clientID
                     });
+
+                    console.log("THIS IS THE TICKET ",ticket)
 
                     const payload = ticket.getPayload();
                     const googleID = payload.sub
@@ -262,6 +266,7 @@ login.post('/google',async (req,res)=>{
 
                 catch(error)
                 {
+                  console.log("SENDING ERROROROROROR")
                     return res.status(400).send({
                         error
                     })
