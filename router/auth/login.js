@@ -210,7 +210,7 @@ login.post('/google',async (req,res)=>{
             const clientID = config.get('GOOGLE_CLIENT_ID')
             const client = new OAuth2Client(clientID);
 
-            console.log(" INSIDE BODY RESPONSE ")
+            console.log(" INSIDE BODY RESPONSE CLIENT => ",client)
 
             async function verifyAndSave() {
 
