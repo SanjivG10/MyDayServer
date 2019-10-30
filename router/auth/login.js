@@ -120,7 +120,6 @@ login.post('/facebook',async(req,res)=>{
     if(req.body)
     {
 
-      console.log("THIS IS THE USER SENT ",req.body)
       const userID = req.body.userID
       const access_token = req.body.accessToken
       const app_id = config.get('FACEBOOK_APP_ID')
@@ -136,15 +135,6 @@ login.post('/facebook',async(req,res)=>{
           .then(json =>
               {
 
-                console.log(" INSIDE ASYNC FUNC ")
-                console.log("USERID ",userID)
-                console.log("USERID ",req.body.userID)
-
-                console.log("USERID ",image)
-                console.log("USERID ",req.body.image)
-                console.log("USERID ",access_token)
-                console.log("USERID ",req.body.access_token)
-
 
                   if(json.data.is_valid)
                   {
@@ -152,19 +142,11 @@ login.post('/facebook',async(req,res)=>{
 
                           if(!err && theUser )
                           {
-                              console.log("USER FOUND")
-                              console.log("Image",image)
-                              console.log("access_token",access_token)
 
                               signTheUser(res,theUser);
                           }
 
                           else {
-                              console.log("User not Found ",json)
-                              console.log("USERID ",userID)
-                              console.log("USER FOUND")
-                              console.log("Image",image)
-                              console.log("access_token",access_token)
 
                               const username =  json.data.user_id
 
@@ -223,10 +205,12 @@ login.post('/google',async (req,res)=>{
     {
         if (req.body.response){
 
-            const id_token = req.body.response.id_token
+              const id_token = req.body.id_token
 
             const clientID = config.get('GOOGLE_CLIENT_ID')
             const client = new OAuth2Client(clientID);
+
+            console.log(" INSIDE BODY RESPONSE ")
 
             async function verifyAndSave() {
 
@@ -243,7 +227,6 @@ login.post('/google',async (req,res)=>{
                     const name  = payload.given_name|| '' + payload.family_name|| ''
                     const username = name + googleID
 
-
                     googleUser.findOne({googleID:googleID}).exec(function(err,theUser){
                         if(!err && theUser )
                         {
@@ -258,6 +241,8 @@ login.post('/google',async (req,res)=>{
                                 username: username
                             })
 
+                            console.log("NEW USER MAKING ")
+
                             newUser.save((err)=>{
                                 if (err) {
                                     return res.status(400).send({
@@ -266,7 +251,7 @@ login.post('/google',async (req,res)=>{
                                 }
 
                                 else {
-                                    signTheUser(newUser);
+                                    signTheUser(res,newUser);
                                 }
                             })
                             // lets create user in our database
