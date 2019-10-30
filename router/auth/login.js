@@ -216,7 +216,8 @@ login.post('/google',async (req,res)=>{
 
                 try{
 
-                   console.log("SOMETHING WENT WRONG")
+                   console.log("CLIENT ID ",clientID)
+                   console.log("id_token =>", id_token)
 
                     const ticket = await client.verifyIdToken({
                         idToken: id_token,
@@ -266,7 +267,7 @@ login.post('/google',async (req,res)=>{
 
                 catch(error)
                 {
-                  console.log("SENDING ERROROROROROR")
+                  console.log("SENDING ERROROROROROR ",error)
                     return res.status(400).send({
                         error
                     })
