@@ -1,6 +1,7 @@
 const express = require('express')
 const multer  = require('multer')
 const fs = require('fs')
+const {user} = require('./../models/users')
 
 storage = express()
 
@@ -74,12 +75,28 @@ storage.post('/posts',(req,res)=>{
           // An unknown error occurred when uploading.
         }
         //we save the content in database now!!
+        user.findOne({username:req.body.username}).then((theUser)=>{
 
-        return res.send({
-            imageUrl: req.file.path,
-            postedBy: req.body.username,
-            publishedDate: Date.now(),
+          theUser.image = imageUrl
+          theUser.save((err)=>{
+            if(err)
+            {
+              return res.status(400).send({
+                error: "Database Error Occured"
+              })
+            }
+            else {
+              return res.send({
+                success: "SUCCESS"
+              })
+            }
+          })
+        }).catch((e)=>{
+          res.status(400).send({
+            error: "Unknown Error Occured.We are sorry for it"
+          })
         })
+
         // Everything went fine.
       })
 })
