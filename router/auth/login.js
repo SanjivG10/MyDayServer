@@ -36,9 +36,11 @@ login.post('/',  async (req,res)=>{
         })
     }
 
+    console.log("THE BODY LOG => ",req.body)
+
     if(req.body.sendMail)
     {
-
+      console.log("SENDING MAIL")
       try {
         await sendMail(res,req.body.email,req.body)
 
@@ -66,8 +68,6 @@ login.post('/',  async (req,res)=>{
     }
 
     const {error,value} = verifyUser(req.body);
-
-    console.log(error,value)
 
     if(error)
     {
