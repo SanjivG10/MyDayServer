@@ -1,9 +1,10 @@
 const express = require('express')
 const jwt = require('jsonwebtoken')
+
 const bcrypt = require('bcrypt')
+
 const {verifyUser} = require('./../../validate/validation')
 const config = require('config')
-
 const {user} = require('./../../models/users')
 const {sendMail} = require('./sendMail')
 

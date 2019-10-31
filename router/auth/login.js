@@ -36,7 +36,6 @@ login.post('/',  async (req,res)=>{
         })
     }
 
-
     if(req.body.sendMail)
     {
 
