@@ -77,7 +77,8 @@ storage.post('/posts',(req,res)=>{
         //we save the content in database now!!
         user.findOne({username:req.body.username}).then((theUser)=>{
 
-          theUser.image = imageUrl
+          theUser.image = req.file.path
+
           theUser.save((err)=>{
             if(err)
             {
@@ -91,11 +92,12 @@ storage.post('/posts',(req,res)=>{
               })
             }
           })
+
         }).catch((e)=>{
           console.log("THE ERROR ",e)
           res.status(400).send({
 
-            error: "Unknown Error Occured.We are sorry for it"
+            error: "Unknown Error Occured.Please Try Again Later!"
           })
         })
 
