@@ -13,7 +13,7 @@ module.exports.sendMail =  async function (email,value) {
         }
     });
 
-    jwt.sign(
+    return jwt.sign(
         {
             exp: Math.floor(Date.now() / 1000) + (60 * 60),
             email
@@ -22,7 +22,7 @@ module.exports.sendMail =  async function (email,value) {
         config.get('EMAIL_SERVER'),async function (err,token){
         if(!err)
         {
-            return await transporter.sendMail({
+            await transporter.sendMail({
                 from: 'MyDay', // sender address
                 to: "sanjivgautamofficial@gmail.com", // list of receivers
                 subject: 'Verify Your Email', // Subject line
