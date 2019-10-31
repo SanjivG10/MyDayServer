@@ -3,8 +3,6 @@ const multer  = require('multer')
 const fs = require('fs')
 const {user} = require('./../models/users')
 
-const {checkPostAuth} = require('./auth/checkLogin')
-
 storage = express()
 
 
@@ -59,7 +57,7 @@ const upload = multer({
 
 storage.use(express.json())
 
-storage.post('/posts',checkPostAuth,(req,res)=>{
+storage.post('/posts',(req,res)=>{
 
     console.log("THE BODY WE GOT HERE ", req.body)
 
