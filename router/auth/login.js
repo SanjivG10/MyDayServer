@@ -43,6 +43,7 @@ login.post('/',  async (req,res)=>{
 
       try {
         const result = await sendMail(req.body.email,req.body)
+        console.log(" THE RESULT OF SENT MAIL  ",result)
         if(!result.error)
         {
           return res.send({
