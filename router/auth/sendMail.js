@@ -40,7 +40,7 @@ module.exports.sendMail =  async function (res,email,value) {
               {
                 console.log("SENDING ERROR ",error)
                 return res.status(400).send({
-                  error: "Cannot sent email "
+                  error: "Cannot sent email at the moment.Please try again later."
                 })
               }
 

@@ -127,8 +127,9 @@ function signTheUser(res,theUser){
     jwt.sign( { theUser}, config.get('DATABASE_SECRET'),function (err,token){
         if(!err)
         {
+          
             return res.header('x-auth-token',token).send({
-                success: "SUCCESS"
+                success: "Success in email verification. Now you can log in."
             })
         }
         else{
