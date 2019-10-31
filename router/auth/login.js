@@ -42,7 +42,7 @@ login.post('/',  async (req,res)=>{
       try {
 
         await sendMail(res,req.body.email,req.body)
-        return 
+        return
       } catch (e) {
         return res.status(400).send({
             error: 'Email cannot be sent! '+ e.message
@@ -58,7 +58,6 @@ login.post('/',  async (req,res)=>{
         }
 
     });
-
 
 
     if(req.body.email) {

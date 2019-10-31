@@ -59,8 +59,6 @@ storage.use(express.json())
 
 storage.post('/posts',(req,res)=>{
 
-    console.log("THE BODY WE GOT HERE ", req.body)
-
     upload(req, res, function (err) {
         if (err instanceof multer.MulterError) {
           // A Multer error occurred when uploading.

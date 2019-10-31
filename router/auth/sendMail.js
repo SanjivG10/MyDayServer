@@ -24,7 +24,7 @@ module.exports.sendMail =  async function (res,email,value) {
         {
             await transporter.sendMail({
                 from: 'MyDay', // sender address
-                to: "sanjivgautamofficial@gmail.com", // list of receivers
+                to: email, // list of receivers
                 subject: 'Verify Your Email', // Subject line
                 html: `
                     Congratulations! Your account has been successfully created. However, you need to verify that the given email is yours,
