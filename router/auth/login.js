@@ -42,10 +42,20 @@ login.post('/',  async (req,res)=>{
     {
 
       try {
-        await sendMail(res,req.body.email,req.body)
-        return res.status(400).send({
-          error: 'Email could not be sent'
-        })
+        const result = await sendMail(res,req.body.email,req.body)
+        if(!result.error)
+        {
+          return res.send({
+            emailSent=true
+          })
+        }
+
+        else {
+          return res.status(400).send({
+            error: result.error
+          })
+        }
+
 
       } catch (e) {
         return res.status(400).send({

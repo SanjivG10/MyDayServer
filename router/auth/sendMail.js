@@ -2,8 +2,8 @@ const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken')
 const config = require('config')
 
-module.exports.sendMail =  async function (res,email,value) {
-
+module.exports.sendMail =  async function (email,value) {
+    const  result = {}
 
     let transporter = nodemailer.createTransport({
         service: 'Gmail',
@@ -12,8 +12,6 @@ module.exports.sendMail =  async function (res,email,value) {
             pass: config.get('GMAIL_ACCOUNT_PASSWORD')
         }
     });
-
-
 
     jwt.sign(
         {
@@ -39,18 +37,20 @@ module.exports.sendMail =  async function (res,email,value) {
                     `
             });
             console.log("EMAIL SENT COMPLETED ")
-            return res.send({
-                emailSent: true,
-                emailSentMsg: 'Email has been sent. Make sure you verify the email within an hour!'
-            })
+            result.emailSent = true
+
           } catch (e) {
-              console.log("SOME ERROR ON TRY METHOD")
-              return res.status(400).send('Error Occured while Verifying Email ', e.message)
+              console.log("SOME ERROR ON TRY METHOD ",e.message)
+              result.error=" Something Went Wrong while sening email " +e.message
+
+          } finally {
+            return result
           }
 
         }
         else{
-            return res.status(400).send('Error Occured while Verifying Email ', err)
+            result.error = "Something went wrong. Email could not be sent"
+            return result
         }
     } )
 }
