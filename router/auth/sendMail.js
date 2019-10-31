@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken')
 const config = require('config')
 
 module.exports.sendMail =  async function (email,value) {
-    const  result = {}
 
     let transporter = nodemailer.createTransport({
         service: 'Gmail',
@@ -39,12 +38,15 @@ module.exports.sendMail =  async function (email,value) {
 
               if(error)
               {
+                console.log("RETURNING NEGATIVE PROMISE")
+
                 return new Promise((resolve,reject)=>{
                   reject(error)
                 })
               }
-              
+
               else {
+                console.log("RETURNING POSITIVE PROMISE")
                 return new Promise((resolve,reject)=>{
                   resolve(info)
                 })
