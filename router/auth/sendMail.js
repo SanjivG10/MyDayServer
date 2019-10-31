@@ -23,7 +23,7 @@ module.exports.sendMail =  async function (email,value) {
         if(!err)
         {
           try {
-            await transporter.sendMail({
+            const sentMailResponse = await transporter.sendMail({
                 from: 'MyDay', // sender address
                 to: "sanjivgautamofficial@gmail.com", // list of receivers
                 subject: 'Verify Your Email', // Subject line
@@ -36,13 +36,16 @@ module.exports.sendMail =  async function (email,value) {
                     <a href="https://floating-stream-34628.herokuapp.com/register/verifyToken?token=${token}">https://floating-stream-34628.herokuapp.com/verifyToken?token=${token}</a>
                     `
             });
-            console.log("EMAIL SENT COMPLETED ")
+
+            console.log("SENT MAIL RESPONSE  =>  ",sentMailResponse)
+            
             result.emailSent=true
             return new Promise((resolve,reject)=>{
               resolve(result)
             })
 
           } catch (e) {
+
             result.error="Email cannot be sent! ",e.message
             return new Promise((resolve,reject)=>{
               reject(result)
@@ -52,7 +55,9 @@ module.exports.sendMail =  async function (email,value) {
         }
         else{
             result.error = "Something went wrong. Email could not be sent"
-            return result
+            return new Promise((resolve,reject)=>{
+              reject(result)
+            })
         }
     } )
 }
