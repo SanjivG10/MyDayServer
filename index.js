@@ -19,6 +19,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.static('static'))
 app.use('/login/',login)
 app.use('/register/',register)
+app.use('/storage/',storage)
 // app.use('/register',register)
 // app.use('/storage',storage)
 

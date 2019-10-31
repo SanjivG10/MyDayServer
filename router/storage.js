@@ -24,7 +24,7 @@ const storePlace = multer.diskStorage({
           } catch (err) {
 
               return cb({
-                  err:'The folder could not be created ' + err
+                  error:'The folder could not be created ' + err
               })
             }
         }
@@ -38,13 +38,12 @@ const storePlace = multer.diskStorage({
     }
   })
 
-
 const upload = multer({
    storage:storePlace,
    fileFilter: (req,file,callback)=>{
     if(file.mimetype !== 'image/png' && file.mimetype !== 'image/jpg' && file.mimetype !== 'image/jpeg') {
         return callback({
-            err: 'Not a valid image!'
+            error: 'Not a valid image!'
         })
     }
     callback(null, true)
@@ -57,20 +56,20 @@ const upload = multer({
 
 storage.use(express.json())
 
-storage.post('/stories',(req,res)=>{
+storage.post('/posts',(req,res)=>{
     upload(req, res, function (err) {
         if (err instanceof multer.MulterError) {
           // A Multer error occurred when uploading.
           return res.status(400).send({
-              err: 'Unknown Error while uploading file '+ err
+              error: 'Unknown Error while uploading file '+ err
           })
+
         } else if (err) {
             return res.status(400).send({
-                err: err.err
+                error: err.err
             })
           // An unknown error occurred when uploading.
         }
-
         //we save the content in database now!!
 
         return res.send({

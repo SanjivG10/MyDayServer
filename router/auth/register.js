@@ -6,7 +6,6 @@ const bcrypt = require('bcrypt')
 const {verifyUser} = require('./../../validate/validation')
 const config = require('config')
 const {user} = require('./../../models/users')
-const {sendMail} = require('./sendMail')
 
 register = express()
 
@@ -44,41 +43,34 @@ register.post('/',  async (req,res)=>{
                         username: req.body.username,
                         password: hash,
                         email: req.body.email,
-                        emailVerified: false
                     })
 
                     newUser.save( async function (err) {
                         if (err) {
 
                             return res.status(400).send({
-                                err: 'Database Error Occured '+err
+                                error: 'Database Error Occured '+err
                             })
                         }
 
                         else {
-
-                            try {
-                                await sendMail(res,req.body.email,value)
-                            } catch (error) {
-                                return res.status(400).send({
-                                    err: 'Email cannot be sent! '+err
-                                })
-                            }
-
+                          return res.send({
+                            success: "SUCCESS"
+                          })
                         }
 
                       });
                 }
                 else{
                     return res.status(400).send({
-                        err: 'Error generating Hash '+err
+                        error: 'Error generating Hash '+err
                     })
                 }
             });
         }
         else{
             return res.status(400).send({
-                err: 'Error generating Salt '+err
+                error: 'Error generating Salt '+err
             })
         }
 
@@ -100,12 +92,12 @@ register.get('/verifyToken',async (req,res)=>{
            theUser.save((err)=>{
             if (err) {
                 return res.status(400).send({
-                    err: 'Database Error Occured '+ err
+                    error: 'Database Error Occured '+ err
                 })
             }
 
             else {
-                signTheUser(res,theUser);
+                signEmail(res,theUser);
             }
         })
         }
@@ -114,26 +106,25 @@ register.get('/verifyToken',async (req,res)=>{
         }
     });
 
-    } catch(err) {
+    } catch(error) {
 
       return res.status(400).send({
-          err
+          error
       })
 
     }
   })
 
-function signTheUser(res,theUser){
+function signEmail(res,theUser){
     jwt.sign( { theUser}, config.get('DATABASE_SECRET'),function (err,token){
         if(!err)
         {
-          
-            return res.header('x-auth-token',token).send({
+            return res.send({
                 success: "Success in email verification. Now you can log in."
             })
         }
         else{
-            return res.status(400).send('Error Occured while Logging In', err)
+            return res.status(400).send('Error Occured Verifying Email ', err)
         }
     } )
 }
