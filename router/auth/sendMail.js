@@ -37,14 +37,16 @@ module.exports.sendMail =  async function (email,value) {
                     `
             });
             console.log("EMAIL SENT COMPLETED ")
-            result.emailSent = true
+            result.emailSent=true
+            return new Promise((resolve,reject)=>{
+              resolve(result)
+            })
 
           } catch (e) {
-              console.log("SOME ERROR ON TRY METHOD ",e.message)
-              result.error=" Something Went Wrong while sening email " +e.message
-
-          } finally {
-            return result
+            result.error="Email cannot be sent! ",e.message
+            return new Promise((resolve,reject)=>{
+              reject(result)
+            })
           }
 
         }
