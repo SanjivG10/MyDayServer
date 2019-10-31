@@ -50,8 +50,8 @@ register.post('/',  async (req,res)=>{
                 {
 
                   user.findOne({username:req.body.username})
-                    .then((user) => {
-                      if (!user) {
+                    .then((userNew) => {
+                      if (!userNew) {
 
                         const newUser = new  user({
                             username: req.body.username,
