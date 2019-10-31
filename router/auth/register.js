@@ -18,11 +18,22 @@ register.post('/',  async (req,res)=>{
         })
     }
 
+    if(req.body.email) {
+      req.body.email = req.body.email.toLowerCase();
+    }
+    else if (req.body.username)  {
+      req.body.username = req.body.username.toLowerCase();
+    }
+
     const {error,value} = verifyUser(req.body);
+
+    console.log("THIS IS THE  ERROR ",error)
 
     if(error)
     {
-        return res.status(400).send(error.details[0].message)
+      return res.status(400).send( {
+        error: error.details[0].message
+      })
     }
 
     else if(!value)
