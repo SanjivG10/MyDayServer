@@ -23,7 +23,6 @@ module.exports.sendMail =  async function (email,value) {
         config.get('EMAIL_SERVER'),async function (err,token){
         if(!err)
         {
-          try {
             await transporter.sendMail({
                 from: 'MyDay', // sender address
                 to: "sanjivgautamofficial@gmail.com", // list of receivers
@@ -40,25 +39,19 @@ module.exports.sendMail =  async function (email,value) {
 
               if(error)
               {
-                console.log("RETURNING ERROR")
-
-                result.error = error
-                return result
+                return new Promise((resolve,reject)=>{
+                  reject(error)
+                })
               }
+              
               else {
-                console.log("RETURNING POSITIVE")
-
-                result.info = info
-                return result
+                return new Promise((resolve,reject)=>{
+                  resolve(info)
+                })
               }
             });
 
-          } catch (e) {
-            console.log("CATCH BLOCK> OH SHIT HERE WE GO AGAIN")
 
-            result.error="Email cannot be sent! ",e.message
-            return result
-          }
 
         }
         else{
