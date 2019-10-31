@@ -68,11 +68,7 @@ register.post('/',  async (req,res)=>{
                             }
 
                             else {
-                              return res.send({
-                                success: "SUCCESS",
-                                token: "HELLO"
-                              })
-                              // signTheUser(res,newUser)
+                              signTheUser(res,newUser)
                             }
 
                           });
