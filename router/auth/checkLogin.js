@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const config = require('config')
 
-module.exports.checkPostAuth = (req, res, next)=>{
+module.exports.checkPostAuth = async (req, res, next)=>{
     if (req.body.token)
         try {
             const decoded = await jwt.verify(req.body.token, config.get('POST_SECRET'));
