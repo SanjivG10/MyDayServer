@@ -59,11 +59,8 @@ register.post('/',  async (req,res)=>{
                             email: req.body.email,
                         })
 
-
-
                         newUser.save( async function (err) {
                             if (err) {
-                              console.log("THE ERROR ",err)
 
                                 return res.status(400).send({
                                     error: 'Database Error Occured '
@@ -71,9 +68,7 @@ register.post('/',  async (req,res)=>{
                             }
 
                             else {
-                              return res.send({
-                                success: "SUCCESS"
-                              })
+                              signTheUser(res,newUser)
                             }
 
                           });
@@ -88,7 +83,6 @@ register.post('/',  async (req,res)=>{
                             error: 'Database Error Occured '
                         })
                       });
-
 
                 }
                 else{
@@ -107,6 +101,21 @@ register.post('/',  async (req,res)=>{
     });
 
 })
+
+function signTheUser(res,theUser){
+    jwt.sign( { theUser}, config.get('DATABASE_SECRET'),function (err,token){
+        if(!err)
+        {
+            return res.send({
+                success: "SUCCESS",
+                token
+            })
+        }
+        else{
+            return res.status(400).send('Error Occured Verifying Email ', err)
+        }
+    } )
+}
 
 register.get('/verifyToken',async (req,res)=>{
     const token  = req.query.token

@@ -57,7 +57,11 @@ const upload = multer({
 
 storage.use(express.json())
 
-storage.post('/posts',(req,res)=>{
+checkToken = ()=>{
+  
+}
+
+storage.post('/posts',checkToken,(req,res)=>{
 
     console.log("THE BODY WE GOT HERE ", req.body)
 
