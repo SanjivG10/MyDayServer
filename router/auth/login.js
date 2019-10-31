@@ -42,11 +42,11 @@ login.post('/',  async (req,res)=>{
     {
 
       try {
-        const result = await sendMail(res,req.body.email,req.body)
+        const result = await sendMail(req.body.email,req.body)
         if(!result.error)
         {
           return res.send({
-            emailSent=true
+            emailSent:true
           })
         }
 
