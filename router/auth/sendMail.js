@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken')
+const config = require('config')
 
 module.exports.sendMail =  async function (res,email,value) {
 
