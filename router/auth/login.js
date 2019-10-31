@@ -36,8 +36,6 @@ login.post('/',  async (req,res)=>{
         })
     }
 
-    console.log("THE BODY LOG => ",req.body)
-
     if(req.body.sendMail)
     {
 
@@ -47,7 +45,8 @@ login.post('/',  async (req,res)=>{
         if(!result.error)
         {
           return res.send({
-            emailSent:true
+            emailSent:true,
+            info: result.info
           })
         }
 

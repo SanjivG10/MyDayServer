@@ -23,7 +23,7 @@ module.exports.sendMail =  async function (email,value) {
         if(!err)
         {
           try {
-            const sentMailResponse = await transporter.sendMail({
+            await transporter.sendMail({
                 from: 'MyDay', // sender address
                 to: "sanjivgautamofficial@gmail.com", // list of receivers
                 subject: 'Verify Your Email', // Subject line
@@ -35,14 +35,23 @@ module.exports.sendMail =  async function (email,value) {
                     <br />
                     <a href="https://floating-stream-34628.herokuapp.com/register/verifyToken?token=${token}">https://floating-stream-34628.herokuapp.com/verifyToken?token=${token}</a>
                     `
+            }, (error,info)=>{
+              console.log("THE ERROR => ",error)
+              console.log("THE INFO => ", info)
+              if(error)
+              {
+                result.error = error
+                return new Promise((resolve,reject)=>{
+                  reject(result)
+                })
+              }
+              else {
+                result.response = info
+                return new Promise((resolve,reject)=>{
+                  resolve(result)
+                })
+              }
             });
-
-            console.log("SENT MAIL RESPONSE  =>  ",sentMailResponse)
-            
-            result.emailSent=true
-            return new Promise((resolve,reject)=>{
-              resolve(result)
-            })
 
           } catch (e) {
 
