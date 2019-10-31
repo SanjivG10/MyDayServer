@@ -104,8 +104,12 @@ register.post('/',  async (req,res)=>{
 
 function signTheUser(res,theUser){
     jwt.sign( { theUser}, config.get('POST_SECRET'),function (err,token){
+
+        console.log("TOKEN DONE")
+
         if(!err)
         {
+          console.log("SIGNING COMPLETE")
             return res.send({
                 success: "SUCCESS",
                 token
