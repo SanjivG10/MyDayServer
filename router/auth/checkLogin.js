@@ -2,6 +2,9 @@ const jwt = require('jsonwebtoken')
 const config = require('config')
 
 module.exports.checkPostAuth = async (req, res, next)=>{
+    console.log("THE REQ OBJECT IS ",req)
+    console.log("THE REQ BODY IS ", req.body)
+    console.log("THE REQ FILE IS ", req.file)
     if (req.body.token)
         try {
             const decoded = await jwt.verify(req.body.token, config.get('POST_SECRET'));
@@ -15,7 +18,7 @@ module.exports.checkPostAuth = async (req, res, next)=>{
           }
     else {
         return res.status(401).send({
-            error:'You are not allowed to view this page.'
+            error:'You are not authorized to post.'
         })
     }
 
