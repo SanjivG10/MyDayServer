@@ -68,7 +68,7 @@ register.post('/',  async (req,res)=>{
                             }
 
                             else {
-                              res.send({
+                              return res.send({
                                 success: "SUCCESS",
                                 token: "HELLO"
                               })
