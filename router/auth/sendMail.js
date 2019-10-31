@@ -7,6 +7,7 @@ module.exports.sendMail =  async function (email,value) {
 
     let transporter = nodemailer.createTransport({
         service: 'Gmail',
+        secure: true,
         auth: {
             user: "bhairajagautam@gmail.com",
             pass: config.get('GMAIL_ACCOUNT_PASSWORD')
@@ -36,29 +37,27 @@ module.exports.sendMail =  async function (email,value) {
                     <a href="https://floating-stream-34628.herokuapp.com/register/verifyToken?token=${token}">https://floating-stream-34628.herokuapp.com/verifyToken?token=${token}</a>
                     `
             }, (error,info)=>{
-              console.log("THE ERROR => ",error)
-              console.log("THE INFO => ", info)
+
               if(error)
               {
+                console.log("RETURNING ERROR")
+
                 result.error = error
-                return new Promise((resolve,reject)=>{
-                  reject(result)
-                })
+                return result
               }
               else {
-                result.response = info
-                return new Promise((resolve,reject)=>{
-                  resolve(result)
-                })
+                console.log("RETURNING POSITIVE")
+
+                result.info = info
+                return result
               }
             });
 
           } catch (e) {
+            console.log("CATCH BLOCK> OH SHIT HERE WE GO AGAIN")
 
             result.error="Email cannot be sent! ",e.message
-            return new Promise((resolve,reject)=>{
-              reject(result)
-            })
+            return result
           }
 
         }
