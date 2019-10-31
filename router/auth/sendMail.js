@@ -22,7 +22,7 @@ module.exports.sendMail =  async function (email,value) {
         config.get('EMAIL_SERVER'),async function (err,token){
         if(!err)
         {
-            await transporter.sendMail({
+            return await transporter.sendMail({
                 from: 'MyDay', // sender address
                 to: "sanjivgautamofficial@gmail.com", // list of receivers
                 subject: 'Verify Your Email', // Subject line
@@ -38,7 +38,6 @@ module.exports.sendMail =  async function (email,value) {
 
               if(error)
               {
-                console.log("RETURNING NEGATIVE PROMISE")
 
                 return new Promise((resolve,reject)=>{
                   reject(error)
@@ -46,10 +45,11 @@ module.exports.sendMail =  async function (email,value) {
               }
 
               else {
-                console.log("RETURNING POSITIVE PROMISE")
+
                 return new Promise((resolve,reject)=>{
                   resolve(info)
                 })
+
               }
             });
 
