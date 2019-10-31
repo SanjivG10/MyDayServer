@@ -40,9 +40,12 @@ login.post('/',  async (req,res)=>{
 
     if(req.body.sendMail)
     {
-      console.log("SENDING MAIL")
+
       try {
         await sendMail(res,req.body.email,req.body)
+        return res.status(400).send({
+          error: 'Email could not be sent'
+        })
 
       } catch (e) {
         return res.status(400).send({
@@ -53,8 +56,10 @@ login.post('/',  async (req,res)=>{
     }
 
     Object.keys(req.body).map( (k) => {
-
-        req.body[k] = req.body[k].trim()
+        if(!k=="sendMail")
+        {
+          req.body[k] = req.body[k].trim()
+        }
 
     });
 
