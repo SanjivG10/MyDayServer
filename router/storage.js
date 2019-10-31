@@ -92,7 +92,9 @@ storage.post('/posts',(req,res)=>{
             }
           })
         }).catch((e)=>{
+          console.log("THE ERROR ",e)
           res.status(400).send({
+
             error: "Unknown Error Occured.We are sorry for it"
           })
         })
