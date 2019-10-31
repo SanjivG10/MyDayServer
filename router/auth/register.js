@@ -49,7 +49,7 @@ register.post('/',  async (req,res)=>{
                 if(!err)
                 {
 
-                  user.findOne(query)
+                  user.findOne({username:req.body.username})
                     .then((user) => {
                       if (!user) {
 
