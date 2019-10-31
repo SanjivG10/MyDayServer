@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken')
 const config = require('config')
 
-module.exports.sendMail =  async function (email,value) {
+module.exports.sendMail =  async function (res,email,value) {
 
     let transporter = nodemailer.createTransport({
         service: 'Gmail',
@@ -13,7 +13,7 @@ module.exports.sendMail =  async function (email,value) {
         }
     });
 
-    return jwt.sign(
+    jwt.sign(
         {
             exp: Math.floor(Date.now() / 1000) + (60 * 60),
             email
@@ -38,16 +38,16 @@ module.exports.sendMail =  async function (email,value) {
 
               if(error)
               {
-
-                return new Promise((resolve,reject)=>{
-                  reject(error)
+                console.log("SENDING ERROR ")
+                return res.status(400).send({
+                  error
                 })
               }
 
               else {
-
-                return new Promise((resolve,reject)=>{
-                  resolve(info)
+                console.log("SENDING VALUE ")
+                return res.send({
+                  emailSent:true
                 })
 
               }
@@ -57,10 +57,10 @@ module.exports.sendMail =  async function (email,value) {
 
         }
         else{
-            result.error = "Something went wrong. Email could not be sent"
-            return new Promise((resolve,reject)=>{
-              reject(result)
-            })
+
+          return res.status(400).send({
+            error: err
+          })
         }
     } )
 }
