@@ -27,7 +27,6 @@ register.post('/',  async (req,res)=>{
 
     const {error,value} = verifyUser(req.body);
 
-    console.log("THIS IS THE  ERROR ",error)
 
     if(error)
     {
@@ -50,27 +49,47 @@ register.post('/',  async (req,res)=>{
                 if(!err)
                 {
 
-                    const newUser = new  user({
-                        username: req.body.username,
-                        password: hash,
-                        email: req.body.email,
+                  user.findOne(query)
+                    .then((user) => {
+                      if (!user) {
+
+                        const newUser = new  user({
+                            username: req.body.username,
+                            password: hash,
+                            email: req.body.email,
+                        })
+
+
+
+                        newUser.save( async function (err) {
+                            if (err) {
+                              console.log("THE ERROR ",err)
+
+                                return res.status(400).send({
+                                    error: 'Database Error Occured '
+                                })
+                            }
+
+                            else {
+                              return res.send({
+                                success: "SUCCESS"
+                              })
+                            }
+
+                          });
+                      }
+                      else {
+                        res.status(400).send({ error: 'Username is already taken'});
+                      }
                     })
-
-                    newUser.save( async function (err) {
-                        if (err) {
-
-                            return res.status(400).send({
-                                error: 'Database Error Occured '+err
-                            })
-                        }
-
-                        else {
-                          return res.send({
-                            success: "SUCCESS"
-                          })
-                        }
-
+                    .catch((err) => {
+                      console.log("THE ERROR ",err)
+                        return res.status(400).send({
+                            error: 'Database Error Occured '
+                        })
                       });
+
+
                 }
                 else{
                     return res.status(400).send({
