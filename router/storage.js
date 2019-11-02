@@ -73,16 +73,28 @@ storage.post('/posts',async (req,res)=>{
 
         else{
 
-          console.log("WE HAVE THE TIKEN ", req.body.token)
           try {
 
+            if (err instanceof multer.MulterError) {
+              // A Multer error occurred when uploading.
+              return res.status(400).send({
+                  error: 'Unknown Error while uploading file '+ err
+              })
+
+            } else if (err) {
+                return res.status(400).send({
+                    error: err.err
+                })
+              // An unknown error occurred when uploading.
+            }
+
             const decoded = await jwt.verify(req.body.token, config.get('DATABASE_SECRET'));
-            console.log("THE DECODED VALUE ",decoded)
-            console.log("THE SENT VALUE ", req.body)
+
             user.findOne({email:decoded.email}).exec(function (err, theUser) {
 
               if(!err && theUser)
               {
+                console.log("USER FOUND")
                 if (req.body.storageOption=="stories")
                 {
                   const image = req.file.path
@@ -92,6 +104,8 @@ storage.post('/posts',async (req,res)=>{
                     username
                   })
 
+                  console.log("STORY MADE")
+
                   story.save((err)=>{
                     if(err)
                     {
@@ -100,6 +114,7 @@ storage.post('/posts',async (req,res)=>{
                       })
                     }
                     else{
+                      console.log("GRAND SUCCESS")
                       return res.send({
                         success:'SUCCESS'
                       })
@@ -148,20 +163,6 @@ storage.post('/posts',async (req,res)=>{
                 error
             })
         }
-
-        if (err instanceof multer.MulterError) {
-          // A Multer error occurred when uploading.
-          return res.status(400).send({
-              error: 'Unknown Error while uploading file '+ err
-          })
-
-        } else if (err) {
-            return res.status(400).send({
-                error: err.err
-            })
-          // An unknown error occurred when uploading.
-        }
-
       }
         //we save the content in database now!!
 
