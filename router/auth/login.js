@@ -14,7 +14,6 @@ const {sendMail} = require('./sendMail')
 login = express()
 
 function signTheUser(res,theUser){
-  console.log("SIGNING THE USER ")
     jwt.sign( { theUser}, config.get('DATABASE_SECRET'),function (err,token){
         if(!err)
         {
