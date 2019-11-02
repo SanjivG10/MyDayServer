@@ -155,7 +155,9 @@ storage.post('/posts',async (req,res)=>{
               }
               else{
                   console.log("THE ERROR ",err)
-                  return res.status(401).send('You are not authorized')
+                  return res.status(401).send({
+                    error: 'You are not authorized'
+                  })
               }
           });
 
