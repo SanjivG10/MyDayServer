@@ -156,6 +156,8 @@ storage.post('/posts',async (req,res)=>{
             })
           // An unknown error occurred when uploading.
         }
+
+      }
         //we save the content in database now!!
 
         // Everything went fine.
