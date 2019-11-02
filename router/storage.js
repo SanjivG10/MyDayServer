@@ -76,7 +76,7 @@ storage.post('/posts',async (req,res)=>{
           console.log("WE HAVE THE TIKEN ", req.body.token)
           try {
 
-            const decoded = await jwt.verify(token, config.get('DATABASE_SECRET'));
+            const decoded = await jwt.verify(req.body.token, config.get('DATABASE_SECRET'));
             console.log("THE DECODED VALUE ",decoded)
             console.log("THE SENT VALUE ", req.body)
             user.findOne({email:decoded.email}).exec(function (err, theUser) {
