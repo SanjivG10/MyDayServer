@@ -25,13 +25,16 @@ const profileSchema = new mongoose.Schema({
 const storySchema = new mongoose.Schema({
     story: {
       type:String
-    }, 
+    },
     username: {
       type: String
     },
     date: {
       type:Date,
       default: Date.now()
+    }, 
+    caption: {
+      type:String
     }
 })
 

@@ -102,11 +102,12 @@ storage.post('/posts',async (req,res)=>{
                 {
                   const image = req.file.path
                   const username = req.body.username
+                  const caption = req.body.caption
                   const story = new storyModel({
                     story: image,
-                    username
+                    username, 
+                    caption
                   })
-                  console.log("STORY MADE")
 
                   story.save((err)=>{
                     if(err)
@@ -153,7 +154,6 @@ storage.post('/posts',async (req,res)=>{
                 }
               }
               else{
-                console.log(" THE ERROR FOR UNAUTHORIZED IS ",err)
                   return res.status(401).send('You are not authorized')
               }
           });
