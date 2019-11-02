@@ -93,9 +93,9 @@ storage.post('/posts',async (req,res)=>{
           try {
 
             const decoded = await jwt.verify(req.body.token, config.get('DATABASE_SECRET'));
-            user.findOne({email:decoded.theUser.email}).exec(function (err, theUser) {
+            user.findOne({email:decoded.theUser.email}).exec(function (err, myUser) {
 
-              if(!err && theUser)
+              if(!err && myUser)
               {
                 console.log("USER FOUND")
                 if (req.body.storageOption=="stories")
@@ -156,7 +156,7 @@ storage.post('/posts',async (req,res)=>{
               else{
                   console.log("THE ERROR ",err)
                   return res.status(401).send({
-                    error: 'You are not authorized'
+                    error: 'You are not allowed to post ATM. Please try again later'
                   })
               }
           });
