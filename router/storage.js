@@ -105,7 +105,7 @@ storage.post('/posts',async (req,res)=>{
                   const caption = req.body.caption
                   const story = new storyModel({
                     story: image,
-                    username, 
+                    username,
                     caption
                   })
 
@@ -154,6 +154,7 @@ storage.post('/posts',async (req,res)=>{
                 }
               }
               else{
+                  console.log("THE ERROR ",err)
                   return res.status(401).send('You are not authorized')
               }
           });
