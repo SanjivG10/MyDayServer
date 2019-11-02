@@ -3,6 +3,8 @@ const multer  = require('multer')
 const fs = require('fs')
 const {user} = require('./../models/users')
 const {storyModel} = require('./../models/storage')
+const jwt = require('jsonwebtoken')
+
 
 storage = express()
 
@@ -69,6 +71,79 @@ storage.post('/posts',(req,res)=>{
             })
         }
 
+        else{
+          try {
+
+            const decoded = await jwt.verify(token, config.get('DATABASE_SECRET'));
+
+            user.findOne({email:decoded.email}).exec(function (err, theUser) {
+
+              if(!err && theUser)
+              {
+                if (req.body.storageOption=="stories")
+                {
+                  const image = req.file.path
+                  const username = req.body.username
+                  const story = new storyModel({
+                    story: image,
+                    username
+                  })
+
+                  story.save((err)=>{
+                    if(err)
+                    {
+                      return res.status(400).send({
+                        error:'Database Error Occured'
+                      })
+                    }
+                    else{
+                      return res.send({
+                        success:'SUCCESS'
+                      })
+                    }
+                  })
+                }
+
+                else if(req.body.storageOption=="profile")
+                {
+                  user.findOne({username:req.body.username}).then((theUser)=>{
+
+                    theUser.image = req.file.path
+
+                    theUser.save((err)=>{
+                      if(err)
+                      {
+                        return res.status(400).send({
+                          error: "Database Error Occured"
+                        })
+                      }
+                      else {
+                        return res.send({
+                          success: "SUCCESS"
+                        })
+                      }
+                    })
+
+                  }).catch((e)=>{
+                    console.log("THE ERROR ",e)
+                    res.status(400).send({
+
+                      error: "Unknown Error Occured.Please Try Again Later!"
+                    })
+                  })
+                }
+              }
+              else{
+                  return res.status(401).send('You are not authorized')
+              }
+          });
+
+          } catch(error) {
+            return res.status(400).send({
+                error
+            })
+        }
+
         if (err instanceof multer.MulterError) {
           // A Multer error occurred when uploading.
           return res.status(400).send({
@@ -82,58 +157,6 @@ storage.post('/posts',(req,res)=>{
           // An unknown error occurred when uploading.
         }
         //we save the content in database now!!
-        if (req.body.storageOption=="stories")
-        {
-          const image = req.file.path
-          const username = req.body.username
-          const story = new storyModel({
-            story: image,
-            username
-          })
-
-          story.save((err)=>{
-            if(err)
-            {
-              return res.status(400).send({
-                error:'Database Error Occured'
-              })
-            }
-            else{
-              return res.send({
-                success:'SUCCESS'
-              })
-            }
-          })
-        }
-
-        else if(req.body.storageOption=="profile")
-        {
-          user.findOne({username:req.body.username}).then((theUser)=>{
-
-            theUser.image = req.file.path
-
-            theUser.save((err)=>{
-              if(err)
-              {
-                return res.status(400).send({
-                  error: "Database Error Occured"
-                })
-              }
-              else {
-                return res.send({
-                  success: "SUCCESS"
-                })
-              }
-            })
-
-          }).catch((e)=>{
-            console.log("THE ERROR ",e)
-            res.status(400).send({
-
-              error: "Unknown Error Occured.Please Try Again Later!"
-            })
-          })
-        }
 
         // Everything went fine.
       })
