@@ -93,12 +93,11 @@ storage.post('/posts',async (req,res)=>{
           try {
 
             const decoded = await jwt.verify(req.body.token, config.get('DATABASE_SECRET'));
-            console.log("THE EMAIL WE TRYING TO LOOK ",decoded.theUser.email)
+
             user.findOne({username:decoded.theUser.username}).exec(function (err, myUser) {
-              console.log("THE USER WE FOUND ",myUser)
+
               if(!err && myUser)
               {
-                console.log("USER FOUND")
                 if (req.body.storageOption=="stories")
                 {
                   const image = req.file.path
@@ -118,7 +117,6 @@ storage.post('/posts',async (req,res)=>{
                       })
                     }
                     else{
-                      console.log("GRAND SUCCESS")
                       return res.send({
                         success:'SUCCESS'
                       })

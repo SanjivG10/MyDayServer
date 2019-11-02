@@ -1,6 +1,6 @@
 const  mongoose = require('mongoose')
 
-mongoose.connect('mongodb+srv://sanjiv:sanjiv@cluster0-nruyn.mongodb.net/storage');
+mongoose.connect('mongodb+srv://sanjiv:sanjiv@cluster0-nruyn.mongodb.net/storage',{ useNewUrlParser: true, useUnifiedTopology: true  })
 
 const db = mongoose.connection;
 
@@ -8,7 +8,7 @@ db.on('error', ()=>
     console.log("Connection Error"))
 
 db.once('open', function() {
-  console.log("SUCCESSFULLY CONNECTED");
+  console.log("SUCCESSFULLY CONNECTED TO STORAGE DATABASE");
 });
 
 
@@ -32,7 +32,7 @@ const storySchema = new mongoose.Schema({
     date: {
       type:Date,
       default: Date.now()
-    }, 
+    },
     caption: {
       type:String
     }
