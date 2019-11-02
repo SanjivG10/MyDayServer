@@ -2,6 +2,7 @@ const express = require('express')
 const multer  = require('multer')
 const fs = require('fs')
 const {user} = require('./../models/users')
+const {storyModel} = require('./../models/storage')
 
 storage = express()
 
@@ -60,6 +61,14 @@ storage.use(express.json())
 storage.post('/posts',(req,res)=>{
 
     upload(req, res, function (err) {
+
+        if(!req.body.token)
+        {
+            return res.status(401).send({
+              error:'You are not authorized to send data.'
+            })
+        }
+
         if (err instanceof multer.MulterError) {
           // A Multer error occurred when uploading.
           return res.status(400).send({
@@ -73,31 +82,58 @@ storage.post('/posts',(req,res)=>{
           // An unknown error occurred when uploading.
         }
         //we save the content in database now!!
-        user.findOne({username:req.body.username}).then((theUser)=>{
+        if (req.body.storageOption=="stories")
+        {
+          const image = req.file.path
+          const username = req.body.username
+          const story = new storyModel({
+            story: image,
+            username
+          })
 
-          theUser.image = req.file.path
-
-          theUser.save((err)=>{
+          story.save((err)=>{
             if(err)
             {
               return res.status(400).send({
-                error: "Database Error Occured"
+                error:'Database Error Occured'
               })
             }
-            else {
+            else{
               return res.send({
-                success: "SUCCESS"
+                success:'SUCCESS'
               })
             }
           })
+        }
 
-        }).catch((e)=>{
-          console.log("THE ERROR ",e)
-          res.status(400).send({
+        else if(req.body.storageOption=="profile")
+        {
+          user.findOne({username:req.body.username}).then((theUser)=>{
 
-            error: "Unknown Error Occured.Please Try Again Later!"
+            theUser.image = req.file.path
+
+            theUser.save((err)=>{
+              if(err)
+              {
+                return res.status(400).send({
+                  error: "Database Error Occured"
+                })
+              }
+              else {
+                return res.send({
+                  success: "SUCCESS"
+                })
+              }
+            })
+
+          }).catch((e)=>{
+            console.log("THE ERROR ",e)
+            res.status(400).send({
+
+              error: "Unknown Error Occured.Please Try Again Later!"
+            })
           })
-        })
+        }
 
         // Everything went fine.
       })

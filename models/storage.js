@@ -12,7 +12,7 @@ db.once('open', function() {
 });
 
 
-// so we have profile array that contains profile pictures of different users. We will save them as username.jpg, so no extra storage would be required 
+// so we have profile array that contains profile pictures of different users. We will save them as username.jpg, so no extra storage would be required
 // next we have images array which contains usersArray which will have userID array which stores the image they post
 // the names of the image would be the timestamp.
 
@@ -23,17 +23,22 @@ const profileSchema = new mongoose.Schema({
 })
 
 const storySchema = new mongoose.Schema({
-    images: [
-        {
-            userID: [String]
-        }
-    ]
+    story: {
+      type:String
+    }, 
+    username: {
+      type: String
+    },
+    date: {
+      type:Date,
+      default: Date.now()
+    }
 })
 
 const profilemodel = mongoose.model('profile',profileSchema);
-const imagesModel = mongoose.model('stories',storySchema);
+const storyModel = mongoose.model('stories',storySchema);
 
 
 
 exports.profilemodel = profilemodel;
-exports.imagesModel = imagesModel;
+exports.storyModel = storyModel;
