@@ -93,8 +93,6 @@ storage.post('/posts',async (req,res)=>{
           try {
 
             const decoded = await jwt.verify(req.body.token, config.get('DATABASE_SECRET'));
-            console.log(decoded.theUser)
-            console.log("ONLY DECODED ", decoded.theUser.email)
             user.findOne({email:decoded.theUser.email}).exec(function (err, theUser) {
 
               if(!err && theUser)
@@ -155,6 +153,7 @@ storage.post('/posts',async (req,res)=>{
                 }
               }
               else{
+                console.log(" THE ERROR FOR UNAUTHORIZED IS ",err)
                   return res.status(401).send('You are not authorized')
               }
           });
