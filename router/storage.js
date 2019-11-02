@@ -72,10 +72,13 @@ storage.post('/posts',async (req,res)=>{
         }
 
         else{
+
+          console.log("WE HAVE THE TIKEN ", req.body.token)
           try {
 
             const decoded = await jwt.verify(token, config.get('DATABASE_SECRET'));
-
+            console.log("THE DECODED VALUE ",decoded)
+            console.log("THE SENT VALUE ", req.body)
             user.findOne({email:decoded.email}).exec(function (err, theUser) {
 
               if(!err && theUser)
@@ -139,6 +142,8 @@ storage.post('/posts',async (req,res)=>{
           });
 
           } catch(error) {
+            console.log("THE ERROR VALUE ",error)
+
             return res.status(400).send({
                 error
             })
