@@ -119,7 +119,6 @@ const googleUserSchema = new  mongoose.Schema({
 })
 
 
-
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -185,7 +184,7 @@ const userSchema = new mongoose.Schema({
 
   });
 
-
-  module.exports.user = mongoose.model('users',userSchema)
-  module.exports.fbUser = mongoose.model('fbUsers',fbUserSchema)
-  module.exports.googleUser = mongoose.model('goolgeUsers',googleUserSchema)
+module.exports.user = mongoose.model('users',userSchema)
+module.exports.fbUser = mongoose.model('fbUsers',fbUserSchema)
+module.exports.googleUser = mongoose.model('goolgeUsers',googleUserSchema)
+module.exports.connectionDatabase = db

@@ -1,8 +1,8 @@
 const express = require('express')
 const multer  = require('multer')
 const fs = require('fs')
-const {user} = require('./../models/users')
-const {storyModel} = require('./../models/storage')
+const {user,connectionDatabase} = require('./../models/users')
+const {storySchema} = require('./../models/storage')
 const jwt = require('jsonwebtoken')
 const config  = require('config')
 
@@ -63,6 +63,9 @@ storage.use(express.json())
 storage.post('/posts',async (req,res)=>{
 
     upload(req, res, async function (err) {
+
+      const storageDatabase = connectionDatabase.useDb('storage');
+      const storyModel = storageDatabase.model('stories', storySchema);
 
       if (err instanceof multer.MulterError) {
         // A Multer error occurred when uploading.
