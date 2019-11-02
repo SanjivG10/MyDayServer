@@ -4,7 +4,7 @@ const fs = require('fs')
 const {user} = require('./../models/users')
 const {storyModel} = require('./../models/storage')
 const jwt = require('jsonwebtoken')
-
+const config  = require('config')
 
 storage = express()
 
