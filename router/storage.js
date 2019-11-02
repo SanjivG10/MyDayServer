@@ -92,10 +92,10 @@ storage.post('/posts',async (req,res)=>{
 
           try {
 
-            const decoded = await jwt.verify(req.body.token, config.get('POST_SECRET'));
-            console.log("THE DECODED VALUE ",decoded)
-            user.findOne({email:decoded.email}).exec(function (err, theUser) {
+            const decoded = await jwt.verify(req.body.token, config.get('DATABASE_SECRET'));
 
+            user.findOne({email:decoded.theUser.email}).exec(function (err, theUser) {
+              
               if(!err && theUser)
               {
                 console.log("USER FOUND")
