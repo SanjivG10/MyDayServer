@@ -64,6 +64,23 @@ storage.post('/posts',async (req,res)=>{
 
     upload(req, res, async function (err) {
 
+      if (err instanceof multer.MulterError) {
+        // A Multer error occurred when uploading.
+        console.log("MULTER ERROR ",err)
+
+        return res.status(400).send({
+            error: 'Unknown Error while uploading file '+ err
+        })
+
+      } else if (err) {
+
+         console.log("THE ERRORRR ",err)
+          return res.status(400).send({
+              error: err.err
+          })
+        // An unknown error occurred when uploading.
+      }
+
         if(!req.body.token)
         {
             return res.status(401).send({
@@ -74,19 +91,6 @@ storage.post('/posts',async (req,res)=>{
         else{
 
           try {
-
-            if (err instanceof multer.MulterError) {
-              // A Multer error occurred when uploading.
-              return res.status(400).send({
-                  error: 'Unknown Error while uploading file '+ err
-              })
-
-            } else if (err) {
-                return res.status(400).send({
-                    error: err.err
-                })
-              // An unknown error occurred when uploading.
-            }
 
             const decoded = await jwt.verify(req.body.token, config.get('DATABASE_SECRET'));
 
@@ -103,7 +107,6 @@ storage.post('/posts',async (req,res)=>{
                     story: image,
                     username
                   })
-
                   console.log("STORY MADE")
 
                   story.save((err)=>{
@@ -145,7 +148,6 @@ storage.post('/posts',async (req,res)=>{
                   }).catch((e)=>{
                     console.log("THE ERROR ",e)
                     res.status(400).send({
-
                       error: "Unknown Error Occured.Please Try Again Later!"
                     })
                   })
@@ -163,6 +165,7 @@ storage.post('/posts',async (req,res)=>{
                 error
             })
         }
+
       }
         //we save the content in database now!!
 
