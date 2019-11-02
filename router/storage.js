@@ -93,8 +93,9 @@ storage.post('/posts',async (req,res)=>{
           try {
 
             const decoded = await jwt.verify(req.body.token, config.get('DATABASE_SECRET'));
+            console.log("THE EMAIL WE TRYING TO LOOK ",decoded.theUser.email)
             user.findOne({email:decoded.theUser.email}).exec(function (err, myUser) {
-
+              console.log("THE USER WE FOUND ",myUser)
               if(!err && myUser)
               {
                 console.log("USER FOUND")
