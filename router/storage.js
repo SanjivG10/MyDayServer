@@ -60,9 +60,9 @@ const upload = multer({
 
 storage.use(express.json())
 
-storage.post('/posts',(req,res)=>{
+storage.post('/posts',async (req,res)=>{
 
-    upload(req, res, function (err) {
+    upload(req, res, async function (err) {
 
         if(!req.body.token)
         {
