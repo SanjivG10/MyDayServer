@@ -67,7 +67,6 @@ const fbUserSchema = new mongoose.Schema({
 
 })
 
-
 const googleUserSchema = new  mongoose.Schema({
     googleID: {
         type: String,

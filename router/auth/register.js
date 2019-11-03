@@ -102,7 +102,8 @@ register.post('/',  async (req,res)=>{
 
 })
 
-function signTheUser(res,theUser){
+function signTheUser(res,theUser,type="own"){
+    theUser.type=type
     jwt.sign( { theUser}, config.get('DATABASE_SECRET'),function (err,token){
 
         if(!err)

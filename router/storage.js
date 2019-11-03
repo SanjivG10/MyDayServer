@@ -1,7 +1,7 @@
 const express = require('express')
 const multer  = require('multer')
 const fs = require('fs')
-const {user,connectionDatabase} = require('./../models/users')
+const {user,fbUser,googleUser,connectionDatabase} = require('./../models/users')
 const {storySchema} = require('./../models/storage')
 const jwt = require('jsonwebtoken')
 const config  = require('config')
@@ -97,7 +97,22 @@ storage.post('/posts',async (req,res)=>{
 
             const decoded = await jwt.verify(req.body.token, config.get('DATABASE_SECRET'));
 
-            user.findOne({username:decoded.theUser.username}).exec(function (err, myUser) {
+            const userToQuery = user
+            if(decoded.theUser)
+            {
+                switch (decoded.theUser.type) {
+                  case "facebook":
+                    userToQuery=fbUser
+                    break;
+                  case "google":
+                    userToQuery=googleUser
+                    break;
+                  default:
+                    userToQuery = user
+                }
+            }
+
+            userToQuery.findOne({username:decoded.theUser.username}).exec(function (err, myUser) {
 
               if(!err && myUser)
               {

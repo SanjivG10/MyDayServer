@@ -4,6 +4,7 @@ const helmet = require('helmet')
 const {login} = require('./router/auth/login')
 const {register} = require('./router/auth/register')
 const {storage}  = require('./router/storage')
+const {query} = require('./router/query')
 
 const PORT = process.env.PORT || 3000
 
@@ -19,6 +20,7 @@ app.use(express.static('static'))
 app.use('/login/',login)
 app.use('/register/',register)
 app.use('/storage/',storage)
+app.use('/query/',query)
 // app.use('/register',register)
 // app.use('/storage',storage)
 

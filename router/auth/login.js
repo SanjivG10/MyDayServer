@@ -13,7 +13,8 @@ const {sendMail} = require('./sendMail')
 
 login = express()
 
-function signTheUser(res,theUser){
+function signTheUser(res,theUser,type="own"){
+    theUser.userType=type
     jwt.sign( { theUser}, config.get('DATABASE_SECRET'),function (err,token){
         if(!err)
         {
@@ -149,8 +150,6 @@ login.post('/facebook',async(req,res)=>{
           .then(response => response.json())
           .then(json =>
               {
-
-
                   if(json.data.is_valid)
                   {
                       fbUser.findOne({fbID:userID}).exec(function(err,theUser){
@@ -158,7 +157,7 @@ login.post('/facebook',async(req,res)=>{
                           if(!err && theUser )
                           {
 
-                              signTheUser(res,theUser);
+                              signTheUser(res,theUser,"fb");
                           }
 
                           else {
@@ -181,7 +180,7 @@ login.post('/facebook',async(req,res)=>{
                                   }
 
                                   else {
-                                      signTheUser(theUser);
+                                      signTheUser(res,newUser,"facebook");
                                   }
                               })
                               // lets create user in our database
@@ -243,7 +242,7 @@ login.post('/google',async (req,res)=>{
                     googleUser.findOne({googleID:googleID}).exec(function(err,theUser){
                         if(!err && theUser )
                         {
-                            signTheUser(res,theUser);
+                            signTheUser(res,theUser,"google");
                         }
 
                         else {
@@ -264,7 +263,7 @@ login.post('/google',async (req,res)=>{
                                 }
 
                                 else {
-                                    signTheUser(res,newUser);
+                                    signTheUser(res,newUser,"");
                                 }
                             })
                             // lets create user in our database
