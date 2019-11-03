@@ -16,7 +16,7 @@ app.set('views','./views')
 app.use(express.json())
 app.use(express.urlencoded({extended:true}));
 
-app.use(express.static('static'))
+app.use(express.static('uploads'))
 app.use('/login/',login)
 app.use('/register/',register)
 app.use('/storage/',storage)

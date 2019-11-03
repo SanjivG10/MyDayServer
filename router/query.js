@@ -51,19 +51,11 @@ async function verifyUser(req,res,next) {
 }
 
 
-query.get('/',(req,res)=>{
-  return res.send({
-    value:"I AM SORRY"
-  })
-})
-
 query.get('/myStories',async (req,res)=>{
     const storageDatabase = connectionDatabase.useDb('storage');
     const storyModel = storageDatabase.model('stories', storySchema);
-    console.log("THE USERNAME ",req.query)
-    console.log("THE USERNAME ",req.query.username)
+
     const cursor = await storyModel.find({ username:req.query.username });
-    console.log("THE RESPONSE  ",cursor)
     return res.send(cursor)
 })
 
