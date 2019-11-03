@@ -97,7 +97,7 @@ storage.post('/posts',async (req,res)=>{
 
             const decoded = await jwt.verify(req.body.token, config.get('DATABASE_SECRET'));
 
-            const userToQuery = user
+            let userToQuery = user
             if(decoded.theUser)
             {
                 switch (decoded.theUser.type) {
