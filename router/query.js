@@ -60,9 +60,9 @@ query.get('/',(req,res)=>{
 query.get('/myStories',async (req,res)=>{
     const storageDatabase = connectionDatabase.useDb('storage');
     const storyModel = storageDatabase.model('stories', storySchema);
-
-    const cursor = await storyModel.find({ username:req.param.username });
-
+    console.log("THE USERNAME ",req.params.username)
+    const cursor = await storyModel.find({ username:req.params.username });
+    console.log("THE RESPONSE  ",cursor)
     return res.send(cursor)
 })
 
